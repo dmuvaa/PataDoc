@@ -1,11 +1,10 @@
-from flask import Flask, Blueprint, render_template
+from flask import render_template
+from .import views
 
-app = Flask(__main__)
-
-@app.route('/')
+@views.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/display/<int:id>')
+@views.route('/display/<int:id>')
 def display(id):
     return render_template('display.html')

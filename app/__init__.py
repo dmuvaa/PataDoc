@@ -1,15 +1,15 @@
 from flask import Flask
-from .models import db
-from .views.routes import main
+from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin
 
+db = SQLAlchemy()
 login_manager = LoginManager()
 
 def create_app():
     app = Flask(__name__)
     
-    app.config['SECRET_KEY'] = 'your-secret-key'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://username:password@localhost/mydatabase'
+    app.config['SECRET_KEY'] = '438589742fdf4cbd9a6a40b22778927c'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://dennis:password123@localhost:5432/patadoc'
 
     db.init_app(app)
     login_manager.init_app(app)

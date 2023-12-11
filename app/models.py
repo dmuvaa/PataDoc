@@ -1,91 +1,81 @@
-from sqlalchemy import create_engine, Column, Integer, String, DateTime, ForeignKey, Float
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
+from . import db
 from datetime import datetime
 
-Base = declarative_base()
-
-class User(Base):
+class User(db.Model):
     __tablename__ = 'users'
 
-    id = Column(Integer, primary_key=True)
-    email = Column(String, unique=True, nullable=False)
-    password_hash = Column(String, nullable=False)
-    role = Column(String, nullable=False)
-    date_created = Column(DateTime, default=datetime.utcnow)
-    last_login = Column(DateTime)
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String, unique=True, nullable=False)
+    password_hash = db.Column(db.String, nullable=False)
+    role = db.Column(db.String, nullable=False)
+    date_created = db.Column(db.DateTime, default=datetime.utcnow)
+    last_login = db.Column(db.DateTime)
     
-    user_data = relationship("UserData", back_populates="user", uselist=False)
-    doctor = relationship("Doctor", back_populates="user", uselist=False)
+    user_data = db.relationship("UserData", back_populates="user", uselist=False)
+    doctor = db.relationship("Doctor", back_populates="user", uselist=False)
 
-class UserData(Base):
+class UserData(db.Model):
     __tablename__ = 'user_data'
 
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
-    first_name = Column(String, nullable=False)
-    last_name = Column(String, nullable=False)
-    date_of_birth = Column(DateTime)
-    gender = Column(String)
-    contact_number = Column(String)
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    first_name = db.Column(db.String, nullable=False)
+    last_name = db.Column(db.String, nullable=False)
+    date_of_birth = db.Column(db.DateTime)
+    gender = db.Column(db.String)
+    contact_number = db.Column(db.String)
 
-    user = relationship("User", back_populates="user_data")
+    user = db.relationship("User", back_populates="user_data")
 
-class Doctor(Base):
+class Doctor(db.Model):
     __tablename__ = 'doctors'
 
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
-    bio = Column(String)
-    profile_picture_url = Column(String)
-    years_of_experience = Column(Integer)
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    bio = db.Column(db.String)
+    profile_picture_url = db.Column(db.String)
+    years_of_experience = db.Column(db.Integer)
     
-    user = relationship("User", back_populates="doctor")
-    appointments = relationship("Appointment", back_populates="doctor")
-    specializations = relationship("DoctorSpecialization", back_populates="doctor")
+    user = db.relationship("User", back_populates="doctor")
+    appointments = db.relationship("Appointment", back_populates="doctor")
+    specializations = db.relationship("DoctorSpecialization", back_populates="doctor")
 
-class Specialization(Base):
+class Specialization(db.Model):
     __tablename__ = 'specializations'
 
-    id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
 
-class DoctorSpecialization(Base):
+class DoctorSpecialization(db.Model):
     __tablename__ = 'doctor_specializations'
 
-    doctor_id = Column(Integer, ForeignKey('doctors.id'), primary_key=True)
-    specialization_id = Column(Integer, ForeignKey('specializations.id'), primary_key=True)
+    doctor_id = db.Column(db.Integer, db.ForeignKey('doctors.id'), primary_key=True)
+    specialization_id = db.Column(db.Integer, db.ForeignKey('specializations.id'), primary_key=True)
 
-    doctor = relationship("Doctor", back_populates="specializations")
-    specialization = relationship("Specialization")
+    doctor = db.relationship("Doctor", back_populates="specializations")
+    specialization = db.relationship("Specialization")
 
-class Appointment(Base):
+class Appointment(db.Model):
     __tablename__ = 'appointments'
 
-    id = Column(Integer, primary_key=True)
-    patient_id = Column(Integer, ForeignKey('users.id'), nullable=False)
-    doctor_id = Column(Integer, ForeignKey('doctors.id'), nullable=False)
-    appointment_time = Column(DateTime, nullable=False)
-    status = Column(String, nullable=False)
-    purpose = Column(String)
-    notes = Column(String)
+    id = db.Column(db.Integer, primary_key=True)
+    patient_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    doctor_id = db.Column(db.Integer, db.ForeignKey('doctors.id'), nullable=False)
+    appointment_time = db.Column(db.DateTime, nullable=False)
+    status = db.Column(db.String, nullable=False)
+    purpose = db.Column(db.String)
+    notes = db.Column(db.String)
 
-    patient = relationship("User")
-    doctor = relationship("Doctor", back_populates="appointments")
+    patient = db.relationship("User")
+    doctor = db.relationship("Doctor", back_populates="appointments")
 
-class Review(Base):
+class Review(db.Model):
     __tablename__ = 'reviews'
 
-    id = Column(Integer, primary_key=True)
-    appointment_id = Column(Integer, ForeignKey('appointments.id'), nullable=False)
-    rating = Column(Float)
-    comment = Column(String)
-    date_posted = Column(DateTime, default=datetime.utcnow)
+    id = db.Column(db.Integer, primary_key=True)
+    appointment_id = db.Column(db.Integer, db.ForeignKey('appointments.id'), nullable=False)
+    rating = db.Column(db.Float)
+    comment = db.Column(db.String)
+    date_posted = db.Column(db.DateTime, default=datetime.utcnow)
 
-    appointment = relationship("Appointment")
-
-"""Add the database URL"""
-engine = create_engine('postgresql://username:password@localhost/mydatabase')
-
-"""Create all tables in the database"""
-Base.metadata.create_all(engine)
+    appointment = db.relationship("Appointment")
