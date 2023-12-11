@@ -8,8 +8,8 @@ login_manager = LoginManager()
 def create_app():
     app = Flask(__name__)
     
+    app.config['SECRET_KEY'] = 'your-secret-key'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://username:password@localhost/mydatabase'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     db.init_app(app)
     login_manager.init_app(app)
@@ -21,9 +21,9 @@ def create_app():
         return User.query.get(int(user_id))
     
     from .auth import auth as auth_blueprint
+    app.register_blueprint(auth_blueprint, url_prefix='/auth')
 
-    app.register_blueprint(main)
-
-    # Import and register other blueprints (auth, user, doctor)
+    from .views import views as views_blueprint
+    app.register_blueprint(views_blueprint)
 
     return app
