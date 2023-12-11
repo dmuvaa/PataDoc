@@ -84,8 +84,8 @@ class Review(Base):
 
     appointment = relationship("Appointment")
 
-# Add the database URL
+"""Add the database URL"""
 engine = create_engine('postgresql://username:password@localhost/mydatabase')
 
-# Create all tables in the database
+"""Create all tables in the database"""
 Base.metadata.create_all(engine)
