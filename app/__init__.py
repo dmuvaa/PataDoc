@@ -1,20 +1,25 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin
+from flask_migrate import Migrate
+from dotenv import load_dotenv
+import os
 
 db = SQLAlchemy()
 login_manager = LoginManager()
 
 def create_app():
+    load_dotenv()
     app = Flask(__name__)
     
-    app.config['SECRET_KEY'] = '438589742fdf4cbd9a6a40b22778927c'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://dennis:password123@localhost:5432/patadoc'
+    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI')
 
     db.init_app(app)
     login_manager.init_app(app)
+    migrate = Migrate(app, db)
 
-    from .models import User, UserData, Doctor, Specialization, DoctorSpecialization, Appointment, Review
+    from .models import User, Doctor, Specialization, DoctorSpecialization, Appointment, Review
 
     @login_manager.user_loader
     def load_user(user_id):
