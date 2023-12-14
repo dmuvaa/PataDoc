@@ -26,9 +26,13 @@ def create_app():
         return User.query.get(int(user_id))
     
     from .auth import auth as auth_blueprint
-    app.register_blueprint(auth_blueprint, url_prefix='/auth')
+    app.register_blueprint(auth_blueprint)
 
     from .views import views as views_blueprint
     app.register_blueprint(views_blueprint)
+
+    @app.teardown_appcontext
+    def teardown_db(exception=None):
+        db.session.remove()
 
     return app

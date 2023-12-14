@@ -13,6 +13,12 @@ class User(db.Model):
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
     last_login = db.Column(db.DateTime)
 
+    def __repr__(self):
+        """ Format the User object"""
+        return ("<User(id={}, email={}, password_hash={}, firstname={}, lastname={}, contact={})>"  # noqa: E501
+                .format(self.id, self.email, self.password_hash,
+                        self.first_name, self.last_name, self.contact_number))
+
 
 class Doctor(db.Model):
     __tablename__ = 'doctors'
