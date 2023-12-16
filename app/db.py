@@ -3,6 +3,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from datetime import datetime
 from .models import User
 from . import db
+from werkzeug.security import generate_password_hash, check_password_hash
 
 session = db.session
 
@@ -32,7 +33,7 @@ def add_user(first_name, last_name, email, contact_number, password):
         last_name=last_name,
         email=email,
         contact_number=contact_number,
-        password_hash=hash_password(password),  # You need to hash the password
+        password_hash=generate_password_hash(password),  # You need to hash the password
         date_created=datetime.utcnow()
     )
 

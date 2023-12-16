@@ -1,8 +1,9 @@
 """ Module handles sign up and login routes """
 from flask import Blueprint, render_template, request, flash, redirect, url_for
-from ..db import register_user, find_user_by, hash_password
+from ..db import register_user, find_user_by, generate_password_hash
 from flask_login import login_user, current_user
 from . import auth
+from werkzeug.security import generate_password_hash, check_password_hash
 
 @auth.route('/sign-up', methods=['GET', 'POST'], strict_slashes=False)
 def sign_up():
@@ -48,16 +49,18 @@ def login():
 
         try:
             user = find_user_by(email)
-            print("{}".format(user))
-            print("{}".format(user.password_hash))
-            if (hash_password(password) == user.password_hash):
+            if user and check_password_hash(user.password_hash, password):
                 login_user(user, remember=True)
-                print("Success")
-                flash('Logged in successfully!', category='success')               
-                return redirect(url_for('views.routes.profile'))
+                flash('Logged in successfully!', category='success')
+                return redirect(url_for('auth.profile'))
             else:
-                flash('Incorrect password, try again.', category='error')
+                flash('Incorrect email or password, try again.', category='error')
         except Exception as e:
-            error_msg = "User does not exist."
-            flash(error_msg, category='error')
+            # error_msg = "An error occurred during login."
+            # flash(error_msg, category='error')
+            print(e)
     return render_template("login.html", user=current_user)
+
+@auth.route('/profile')
+def profile():
+    return render_template('base.html')

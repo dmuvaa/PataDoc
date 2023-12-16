@@ -5,9 +5,9 @@ from . import views
 def index():
     return render_template('base.html')
 
-@views.route('/profile')
-def profile():
-    return render_template('index.html')
+# @views.route('/profile')
+# def profile():
+#     return render_template('base.html')
 
 @views.route('/display/<int:id>')
 def display(id):
