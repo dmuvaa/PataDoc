@@ -5,38 +5,34 @@ class User(db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String, unique=True, nullable=False)
-    password_hash = db.Column(db.String, nullable=False)
-    role = db.Column(db.String, nullable=False)
-    date_created = db.Column(db.DateTime, default=datetime.utcnow)
-    last_login = db.Column(db.DateTime)
-    
-    user_data = db.relationship("UserData", back_populates="user", uselist=False)
-    doctor = db.relationship("Doctor", back_populates="user", uselist=False)
-
-class UserData(db.Model):
-    __tablename__ = 'user_data'
-
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     first_name = db.Column(db.String, nullable=False)
     last_name = db.Column(db.String, nullable=False)
-    date_of_birth = db.Column(db.DateTime)
-    gender = db.Column(db.String)
     contact_number = db.Column(db.String)
+    email = db.Column(db.String, unique=True, nullable=False)
+    password_hash = db.Column(db.String, nullable=False)
+    date_created = db.Column(db.DateTime, default=datetime.utcnow)
+    last_login = db.Column(db.DateTime)
 
-    user = db.relationship("User", back_populates="user_data")
+    def __repr__(self):
+        """ Format the User object"""
+        return ("<User(id={}, email={}, password_hash={}, firstname={}, lastname={}, contact={})>"  # noqa: E501
+                .format(self.id, self.email, self.password_hash,
+                        self.first_name, self.last_name, self.contact_number))
+
 
 class Doctor(db.Model):
     __tablename__ = 'doctors'
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    first_name = db.Column(db.String, nullable=False)
+    last_name = db.Column(db.String, nullable=False)
+    email = db.Column(db.String, unique=True, nullable=False)
+    password_hash = db.Column(db.String, nullable=False)
     bio = db.Column(db.String)
     profile_picture_url = db.Column(db.String)
     years_of_experience = db.Column(db.Integer)
     
-    user = db.relationship("User", back_populates="doctor")
     appointments = db.relationship("Appointment", back_populates="doctor")
     specializations = db.relationship("DoctorSpecialization", back_populates="doctor")
 
