@@ -1,4 +1,5 @@
 import bcrypt
+import re
 from sqlalchemy.orm.exc import NoResultFound
 from datetime import datetime
 from .models import User
@@ -44,11 +45,21 @@ def add_user(first_name, last_name, email, contact_number, password):
         raise e
 
 
+def is_valid_email(email):
+    pattern = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+    
+    match = re.match(pattern, email)
+    
+    return bool(match)
+
+
 def register_user(first_name, last_name, email, contact_number, password):
         """ Check if user exists, if not, register the user
         """
-        try:
-            find_user_by(email=email)
-            raise ValueError("User {} already exists".format(email))
-        except NoResultFound:
-            add_user(first_name, last_name, email, contact_number, password)
+        if is_valid_email(email):
+            try:
+                find_user_by(email=email)
+                raise ValueError("User {} already exists".format(email))
+            except NoResultFound:
+                add_user(first_name, last_name, email, contact_number, password)
+        raise ValueError("{} is invalid".format(email))
