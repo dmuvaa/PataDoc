@@ -53,7 +53,7 @@ def login_patient():
             if user and check_password_hash(user.password_hash, password):
                 login_user(user, remember=True)
                 flash('Logged in successfully!', category='success')
-                return redirect(url_for('auth.profile'))
+                return redirect(url_for('views.patient_profile'))
             else:
                 flash('Incorrect email or password, try again.', category='error')
         except Exception as e:
@@ -62,6 +62,6 @@ def login_patient():
             print(e)
     return render_template("login.html", user=current_user)
 
-@auth.route('/profile/patient')
-def profile():
-    return render_template('base.html')
+# @auth.route('/profile/patient')
+# def profile():
+#     return render_template('base.html')

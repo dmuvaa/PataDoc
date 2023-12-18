@@ -19,9 +19,11 @@ def sign_up_doc():
         first_name = data.get('first_name')
         last_name = data.get('last_name')
         email = data.get('email')
-        contact_number = data.get('contact')        
+        contact = data.get('contact')        
         password = data.get('password')
         bio = data.get('bio')
+        profile_picture_url = data.get('profile_picture_url')
+        license_no = data.get('license_no')
 
         # if first_name is None:
         #     flash('email missing', category='error')
@@ -32,14 +34,15 @@ def sign_up_doc():
         # if last_name is None:
         #     flash('LastName missing', category='error')
         try:
-            register_doc(first_name, last_name, email, contact_number, password)
+            register_doc(
+                first_name, last_name, email, contact, password, bio,
+                profile_picture_url, license_no)
             return redirect(url_for('auth.login_doc'))
         except Exception as e:
             error_msg = "Can't create User: {}".format(e)
             flash(error_msg, category='error')
                 
     return render_template('sign_up.html')
-
 
 @auth.route('/login/doctor', methods=['GET', 'POST'])
 def login_doc():
@@ -53,7 +56,7 @@ def login_doc():
             if user and check_password_hash(user.password_hash, password):
                 login_user(user, remember=True)
                 flash('Logged in successfully!', category='success')
-                return redirect(url_for('auth.profile'))
+                return redirect(url_for('views.doctor_profile'))
             else:
                 flash('Incorrect email or password, try again.', category='error')
         except Exception as e:
@@ -61,7 +64,3 @@ def login_doc():
             # flash(error_msg, category='error')
             print(e)
     return render_template("login.html", user=current_user)
-
-@auth.route('/profile/doctor')
-def profile():
-    return render_template('base.html')

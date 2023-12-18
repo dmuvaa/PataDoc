@@ -1,9 +1,10 @@
 from sqlalchemy.orm.exc import NoResultFound
 from datetime import datetime
-from .models import User, Doctor
+from .models import User, Doctor, Appointment, Review
 from . import db
 from werkzeug.security import generate_password_hash
 import re
+from typing import List
 
 session = db.session
 
@@ -26,7 +27,7 @@ def add_user(first_name, last_name, email, contact_number, password):
         email=email,
         contact_number=contact_number,
         password_hash=generate_password_hash(password),  # You need to hash the password
-        date_created=datetime.utcnow()
+        date_created=datetime.utcnow(),
     )
 
     try:
@@ -66,7 +67,9 @@ def find_doc_by(email) -> Doctor:
         raise NoResultFound
 
 
-def add_doc(first_name, last_name, email, contact_number, password):
+def add_doc(
+        first_name, last_name, email, contact_number, password, bio,
+        profile_picture_url, license_no):
     """ Add the doctor to the database"""
     doc = Doctor(
         first_name=first_name,
@@ -74,6 +77,9 @@ def add_doc(first_name, last_name, email, contact_number, password):
         email=email,
         contact_number=contact_number,
         password_hash=generate_password_hash(password),  # You need to hash the password
+        bio=bio,
+        profile_picture_url=profile_picture_url,
+        license_no=license_no,
         date_created=datetime.utcnow()
     )
 
@@ -84,7 +90,9 @@ def add_doc(first_name, last_name, email, contact_number, password):
         session.rollback()
         raise e
     
-def register_doc(first_name, last_name, email, contact_number, password):
+def register_doc(
+        first_name, last_name, email, contact_number, password, bio,
+        profile_picture_url, license_no):
         """ Check if doctor exists, if not, register the doctor
         """
         if is_valid_email(email):
@@ -92,5 +100,56 @@ def register_doc(first_name, last_name, email, contact_number, password):
                 find_doc_by(email=email)
                 raise ValueError("Doctor {} already exists".format(email))
             except NoResultFound:
-                add_doc(first_name, last_name, email, contact_number, password)
+                add_doc(
+                    first_name, last_name, email, contact_number, password,
+                    bio, profile_picture_url, license_no)
         raise ValueError("{} is invalid".format(email))
+
+def find_patient_app(id) -> List[User]:
+    """returns the rows found in the appointments table
+    """
+    if not id:
+        raise ValueError
+    try:
+        return session.query(Appointment).filter_by(patient_id=id).all()
+    except NoResultFound:
+        raise NoResultFound
+    
+def find_rev(appointment_id):
+    """gets review of an appointment"""
+    if not appointment_id:
+        raise ValueError
+    try:
+        return session.query(Review).filter_by(appointment_id).one()
+    except NoResultFound:
+        raise NoResultFound
+
+def find_doctor_app(id) -> List[Doctor]:
+    """returns the rows found in the appointments table
+    """
+    if not id:
+        raise ValueError
+    try:
+        return session.query(Appointment).filter_by(doctor_id=id).all()
+    except NoResultFound:
+        raise NoResultFound
+    
+def find_doc(id) -> Doctor:
+    """returns the first row found in the doctors table
+    """
+    if not id:
+        raise ValueError
+    try:
+        return session.query(Doctor).filter_by(id=id).one()
+    except NoResultFound:
+        raise NoResultFound
+    
+def find_patient(id) -> User:
+    """returns the first row found in the users table
+    """
+    if not id:
+        raise ValueError
+    try:
+        return session.query(User).filter_by(id=id).one()
+    except NoResultFound:
+        raise NoResultFound
