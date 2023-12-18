@@ -23,7 +23,7 @@ def sign_up_patient():
         contact_number = data.get('contact')        
         password = data.get('password')
 
-        if first_name is None:
+        if email is None:
             flash('email missing', category='error')
         if password is None:
             flash('password missing', category='error')
