@@ -22,21 +22,33 @@ class User(db.Model, UserMixin):
                         self.first_name, self.last_name, self.contact_number))
 
 
-class Doctor(db.Model):
+class Doctor(db.Model, UserMixin):
     __tablename__ = 'doctors'
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     first_name = db.Column(db.String, nullable=False)
     last_name = db.Column(db.String, nullable=False)
     email = db.Column(db.String, unique=True, nullable=False)
+    contact = db.Column(db.String)
     password_hash = db.Column(db.String, nullable=False)
-    bio = db.Column(db.String)
+    speciality = db.Column(db.String, nullable=False)
+    bio = db.Column(db.String, nullable=False)
     profile_picture_url = db.Column(db.String)
-    years_of_experience = db.Column(db.Integer)
+    license_no = db.Column(db.String, unique=True, nullable=False)
     
     appointments = db.relationship("Appointment", back_populates="doctor")
     specializations = db.relationship("DoctorSpecialization", back_populates="doctor")
+
+    def __repr__(self):
+        """ Format the Doctor object"""
+        return (
+            "<Doctor(id={}, email={}, password_hash={}, firstname={}, "
+            "lastname={}, contact={}, speciality={}, bio={}, "
+            "profile_picture_url={}, license_no{})>"
+                .format(self.id, self.email, self.password_hash,
+                        self.first_name, self.last_name, self.contact,
+                        self.speciality, self.bio, self.profile_picture_url,
+                        self.license_no))
 
 class Specialization(db.Model):
     __tablename__ = 'specializations'
