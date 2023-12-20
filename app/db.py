@@ -48,7 +48,7 @@ def is_valid_email(email):
 def register_user(first_name, last_name, email, contact_number, password):
         """ Check if user exists, if not, register the user
         """
-        if is_valid_email(email):
+        if is_valid_email(email.strip()):
             try:
                 find_user_by(email=email)
                 raise ValueError("User {} already exists".format(email))
@@ -68,19 +68,18 @@ def find_doc_by(email) -> Doctor:
 
 
 def add_doc(
-        first_name, last_name, email, contact_number, password, bio,
-        profile_picture_url, license_no):
+        first_name, last_name, email, contact, password, speciality,
+        bio, license_no):
     """ Add the doctor to the database"""
     doc = Doctor(
         first_name=first_name,
         last_name=last_name,
         email=email,
-        contact_number=contact_number,
+        contact=contact,
         password_hash=generate_password_hash(password),  # You need to hash the password
+        speciality=speciality,
         bio=bio,
-        profile_picture_url=profile_picture_url,
-        license_no=license_no,
-        date_created=datetime.utcnow()
+        license_no=license_no
     )
 
     try:
@@ -91,18 +90,18 @@ def add_doc(
         raise e
     
 def register_doc(
-        first_name, last_name, email, contact_number, password, bio,
-        profile_picture_url, license_no):
+        first_name, last_name, email, contact, password, speciality,
+        bio, license_no):
         """ Check if doctor exists, if not, register the doctor
         """
-        if is_valid_email(email):
+        if is_valid_email(email.strip()):
             try:
                 find_doc_by(email=email)
                 raise ValueError("Doctor {} already exists".format(email))
             except NoResultFound:
                 add_doc(
-                    first_name, last_name, email, contact_number, password,
-                    bio, profile_picture_url, license_no)
+                    first_name, last_name, email, contact, password,
+                    speciality, bio, license_no)
         raise ValueError("{} is invalid".format(email))
 
 def find_patient_app(id) -> List[User]:

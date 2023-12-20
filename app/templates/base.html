@@ -44,15 +44,7 @@
     />
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='styles/properties.css') }}"
-    />
-    <link
-      rel="stylesheet"
       href="{{ url_for('static', filename='styles/sign_up.css') }}"
-    />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='styles/agents.css') }}"
     />
     <link
       rel="stylesheet"
@@ -87,6 +79,7 @@
               <span class="sr-only">Visit our Instagram page</span>
             </a>
           </div>
+          {% if current_user.is_authenticated %}
           <a class="nav-item nav-link" id="home" href="/">
             <img id="kody_icon" src="{{ url_for('static', filename='images/kody_icon.jpg') }}" alt="Icon">
           </a>
@@ -95,9 +88,18 @@
             >Specializations</a
           >
           <a class="nav-item nav-link" id="specialists" href="/specialists">Specialists</a>
-          <!-- <div class="nav-item nav-link" id="login-signup">
-            <a href="/login">Login</a>/<a href="/sign-up">Sign-up</a>
-          </div> -->
+          <div class="nav-item nav-link" id="logout">
+            <a id="log" href="/logout">Logout</a>
+          </div>
+          {% else %}
+          <a class="nav-item nav-link" id="home" href="/">
+            <img id="kody_icon" src="{{ url_for('static', filename='images/patadoc_icon.jpg') }}" alt="Icon">
+          </a>
+          <a class="nav-item nav-link" id="aboutUs" href="/aboutUs">About Us</a>
+          <a class="nav-item nav-link" id="specializations" href="/specilaizations"
+            >Specializations</a
+          >
+          <a class="nav-item nav-link" id="specialists" href="/specialists">Specialists</a>
           <div class="nav-item nav-link">
             <label for="signup-role">Sign-up as:</label>
             <select id="signup-role">
@@ -114,6 +116,7 @@
             </select>      
           <button onclick="redirectToLogin()">Login</button>
         </div>
+        {% endif %}
       </div>
     </nav>
     {% with messages = get_flashed_messages(with_categories=true) %} {% if
@@ -193,9 +196,9 @@
             
             // Redirect to the appropriate signup page based on the selected role
             if (role === "patient") {
-                window.location.href = "/signup/patient";
+                window.location.href = "/sign-up/patient";
             } else if (role === "doctor") {
-                window.location.href = "/signup/doctor";
+                window.location.href = "/sign-up/doctor";
             }
         }
     </script>

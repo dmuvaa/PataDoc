@@ -1,9 +1,16 @@
 """ Module handles sign up and login routes """
-from flask import render_template, request, flash, redirect, url_for
+from flask import render_template, request, flash, redirect, url_for, session
 from ..db import register_doc, find_doc_by
 from flask_login import login_user, current_user
 from . import auth
 from werkzeug.security import check_password_hash
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
+
+def allowed_file(filename):
+    """ Checks whether the image file type is among the allowed extentions """
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @auth.route('/sign-up/doctor', methods=['GET', 'POST'], strict_slashes=False)
 def sign_up_doc():
@@ -21,28 +28,21 @@ def sign_up_doc():
         email = data.get('email')
         contact = data.get('contact')        
         password = data.get('password')
+        speciality = data.get('speciality')
         bio = data.get('bio')
-        profile_picture_url = data.get('profile_picture_url')
         license_no = data.get('license_no')
 
-        # if first_name is None:
-        #     flash('email missing', category='error')
-        # if password is None:
-        #     flash('password missing', category='error')
-        # if first_name is None:
-        #     flash('FirstName missing', category='error')
-        # if last_name is None:
-        #     flash('LastName missing', category='error')
         try:
             register_doc(
-                first_name, last_name, email, contact, password, bio,
-                profile_picture_url, license_no)
+                first_name, last_name, email, contact, password, speciality,
+                bio, license_no)
+            flash('Sign up successful!', category='success')
             return redirect(url_for('auth.login_doc'))
         except Exception as e:
-            error_msg = "Can't create User: {}".format(e)
+            error_msg = "Can't create Doctor: {}".format(e)
             flash(error_msg, category='error')
                 
-    return render_template('sign_up.html')
+    return render_template('doctor_sign_up.html')
 
 @auth.route('/login/doctor', methods=['GET', 'POST'])
 def login_doc():
@@ -52,9 +52,11 @@ def login_doc():
         password = request.form.get('password')
 
         try:
-            user = find_doc_by(email)
-            if user and check_password_hash(user.password_hash, password):
-                login_user(user, remember=True)
+            doctor = find_doc_by(email)
+
+            if doctor and check_password_hash(doctor.password_hash, password):
+                session['user_type'] = 'doctor'
+                login_user(doctor, remember=True)
                 flash('Logged in successfully!', category='success')
                 return redirect(url_for('views.doctor_profile'))
             else:
@@ -63,4 +65,4 @@ def login_doc():
             # error_msg = "An error occurred during login."
             # flash(error_msg, category='error')
             print(e)
-    return render_template("login.html", user=current_user)
+    return render_template("login.html", doctor=current_user)

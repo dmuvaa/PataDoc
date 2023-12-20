@@ -1,7 +1,7 @@
 """ Module handles sign up and login routes """
-from flask import render_template, request, flash, redirect, url_for
+from flask import render_template, request, flash, redirect, url_for, session
 from ..db import register_user, find_user_by
-from flask_login import login_user, current_user
+from flask_login import login_user, current_user, login_required, logout_user
 from . import auth
 from werkzeug.security import check_password_hash
 
@@ -51,6 +51,7 @@ def login_patient():
         try:
             user = find_user_by(email)
             if user and check_password_hash(user.password_hash, password):
+                session['user_type'] = 'user'
                 login_user(user, remember=True)
                 flash('Logged in successfully!', category='success')
                 return redirect(url_for('views.patient_profile'))
@@ -62,6 +63,3 @@ def login_patient():
             print(e)
     return render_template("login.html", user=current_user)
 
-# @auth.route('/profile/patient')
-# def profile():
-#     return render_template('base.html')
