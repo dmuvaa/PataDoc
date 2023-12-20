@@ -27,6 +27,15 @@
             box-sizing: border-box;
         }
 
+        section {
+            width: 100%;
+            min-width: 300px;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
         h2 {
             text-align: center;
             color: #333;
@@ -73,39 +82,28 @@
     </style>
 </head>
 <body>
-    <div class="signup-container">
-        <h2>Sign Up</h2>
-        <form action="/sign-up" method="post">
-            <label for="first_name">First Name:</label>
-            <input type="text" id="first_name" name="first_name" required>
+    <section>
+        <div class="signup-container">
+            <h2>Sign Up</h2>
+            <form action="/sign-up" method="post">
+                <label for="first_name">First Name:</label>
+                <input type="text" id="first_name" name="first_name" required>
 
-            <label for="last_name">Last Name:</label>
-            <input type="text" id="last_name" name="last_name" required>
+                <label for="last_name">Last Name:</label>
+                <input type="text" id="last_name" name="last_name" required>
 
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
 
-            <label for="contact">Contact Number:</label>
-            <input type="text" id="contact" name="contact">
+                <label for="contact">Contact Number:</label>
+                <input type="text" id="contact" name="contact">
 
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
 
-            <button type="submit">Sign Up</button>
-        </form>
-    </div>
-    <!-- <div class="flash-messages">
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    <ul class="flashes">
-      {% for category, message in messages %}
-        <li class="{{ category }}">{{ message }}</li>
-      {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
-
-    </div> -->
-    
+                <button type="submit">Sign Up</button>
+            </form>
+        </div>
+    </section>
 </body>
 </html>

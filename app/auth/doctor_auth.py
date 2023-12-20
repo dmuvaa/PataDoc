@@ -42,7 +42,7 @@ def sign_up_doc():
             error_msg = "Can't create User: {}".format(e)
             flash(error_msg, category='error')
                 
-    return render_template('sign_up.html')
+    return render_template('doc_signup.html')
 
 @auth.route('/login/doctor', methods=['GET', 'POST'])
 def login_doc():
