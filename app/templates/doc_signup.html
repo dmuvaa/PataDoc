@@ -106,17 +106,16 @@
                 <h3>Upload your profile picture</h3>
                 <div class="profile-picture" id="profile_picture">
                     <form
-                        action="/upload_pic/{{ current_user.id }}"
+                        action="/sign-up/doctor"
                         method="POST"
                         enctype="multipart/form-data"
                     >
                         <input type="file" name="image" accept="image/*" />
-                        <button type="submit">Upload</button>
                     </form>
                 </div>
             </div>
 
-            <form action="/doctor-signup" method="post">
+            <form action="/sign-up/doctor" method="post">
                 <label for="first_name">First Name:</label>
                 <input type="text" id="first_name" name="first_name" required>
 
