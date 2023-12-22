@@ -22,7 +22,7 @@ class User(db.Model, UserMixin):
                         self.first_name, self.last_name, self.contact_number))
 
 
-class Doctor(db.Model):
+class Doctor(db.Model, UserMixin):
     __tablename__ = 'doctors'
 
     id = db.Column(db.Integer, primary_key=True)
