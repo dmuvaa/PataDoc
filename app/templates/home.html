@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Page Title</title>
+    <title>Home</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -18,14 +18,15 @@
             align-items: center;
             height: 100vh;
             background-color: #b3cada8f;
+            margin: 15px;
         }
 
         .column {
             flex: 1;
             padding: 20px;
             text-align: center;
-            border-radius: 0px;
-            margin: 0px;
+            border-radius: 10px;
+            margin: 10px;
         }
 
         h2 {
@@ -36,13 +37,13 @@
         h3 {
             font-size: 18px;
             margin-top: 5px;
-            margin-bottom: 8px;
+            margin-bottom: 0px;
         }
 
         p {
             color: #02090a;
             display: flex;
-            padding: 40px;
+            padding: 0px;
             text-align: center;
         }
 
@@ -68,7 +69,7 @@
             justify-content: space-around;
             align-items: center;
             background-color: #ecf0f1;
-            padding: 40px;
+            padding: 0px;
             text-align: center;
         }
 
@@ -80,9 +81,9 @@
             color: #fff;
         }
         .what-we-do {
-
+            margin: 15px;
+            padding: 20px;
         }
-
         .bottom-arrow::before {
             content: '';
             position: absolute;
@@ -121,7 +122,7 @@
 
     <div class="column">
         <h2>Our Core</h2>
-        <h3> 50+ Experienced Practitioners </h3>
+        <h3>50+ Experienced Practitioners</h3>
         <p>Embark on your healthcare journey with confidence as PataDoc boasts a team of 50+ seasoned practitioners. Our experts bring a wealth of experience.</p>
         <h3>24/7 Instant Support</h3>
         <p>Need assistance at any hour? PataDoc stands out with 24/7 instant support, providing you with peace of mind and timely answers to your healthcare queries</p>
@@ -131,7 +132,7 @@
     </div>
 
     <div class="column">
-        <img src="app\static\images\doctor.jpg" alt="Doctor Image">
+        <img src="{{ url_for('static', filename='images/doctor.jpg') }}"  alt="Doctor Image">
         <a href="#" class="btn">Book Appointment</a>
     </div>
 </div>

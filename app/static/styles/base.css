@@ -1,0 +1,120 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #ecf0f1;
+}
+
+.hero-section {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 100vh;
+    background-color: #b3cada8f;
+    margin: 15px;
+}
+
+.column {
+    flex: 1;
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px;
+    margin: 10px;
+}
+
+h2 {
+    color: #02090a;
+    text-align: center;
+}
+
+h3 {
+    font-size: 18px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+p {
+    color: #02090a;
+    display: flex;
+    padding: 0px;
+    text-align: center;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #00BCD4;
+    color: #fff;
+    border-radius: 39px;
+    text-decoration: none;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    margin-top: 0px;
+}
+
+/* New "What We Do" section */
+.services {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #ecf0f1;
+    padding: 0px;
+    text-align: center;
+}
+
+.what-we-do-column {
+    flex: 1;
+    padding: 20px;
+    border-radius: 15px;
+    margin: 10px;
+    color: #fff;
+}
+.what-we-do {
+    margin: 15px;
+    padding: 20px;
+    margin-bottom: 5%;
+}
+.Why-us {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 100vh;
+    background-color: #b3cada8f;
+    margin: 15px;
+}
+.why-us-column {
+    flex: 1;
+    padding: 20px;
+    /* text-align: center; */
+    border-radius: 10px;
+    margin: 10px;
+}
+.bottom-arrow::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    width: 20px;
+    height: 2px;
+    background-color: #3498db;
+}
+
+.bottom-arrow {
+    bottom: -20px;
+}
+.bottom-arrow::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg); /* Updated rotation to -45 degrees */
+    width: 20px;
+    height: 2px;
+    background-color: #3498db;
+}
