@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Page Title</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ecf0f1;
+        }
+
+        .hero-section {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 100vh;
+            background-color: #b3cada8f;
+        }
+
+        .column {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            border-radius: 0px;
+            margin: 0px;
+        }
+
+        h2 {
+            color: #02090a;
+            text-align: center;
+        }
+
+        h3 {
+            font-size: 18px;
+            margin-top: 5px;
+            margin-bottom: 8px;
+        }
+
+        p {
+            color: #02090a;
+            display: flex;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #00BCD4;
+            color: #fff;
+            border-radius: 39px;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
+        }
+
+        /* New "What We Do" section */
+        .services {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background-color: #ecf0f1;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .what-we-do-column {
+            flex: 1;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 10px;
+            color: #fff;
+        }
+        .what-we-do {
+
+        }
+
+        .bottom-arrow::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(45deg);
+            width: 20px;
+            height: 2px;
+            background-color: #3498db;
+        }
+
+        .bottom-arrow {
+            bottom: -20px;
+        }
+        .bottom-arrow::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg); /* Updated rotation to -45 degrees */
+            width: 20px;
+            height: 2px;
+            background-color: #3498db;
+        }
+    </style>
+</head>
+<body>
+
+<div class="hero-section">
+    <div class="column">
+        <h2>Find your doctor or take appointments</h2>
+        <p>Explore our services to find the right practitioner for you.</p>
+        <a href="#" class="btn">Book Appointment</a>
+        <a href="#" class="btn">Learn More</a>
+    </div>
+
+    <div class="column">
+        <h2>Our Core</h2>
+        <h3> 50+ Experienced Practitioners </h3>
+        <p>Embark on your healthcare journey with confidence as PataDoc boasts a team of 50+ seasoned practitioners. Our experts bring a wealth of experience.</p>
+        <h3>24/7 Instant Support</h3>
+        <p>Need assistance at any hour? PataDoc stands out with 24/7 instant support, providing you with peace of mind and timely answers to your healthcare queries</p>
+        <h3>Verified Reviews</h3>
+        <p>PataDoc ensures transparency and credibility with verified reviews. Our community shares their experiences, empowering you to make informed choices and fostering a trusting relationship with our practitioners.</p>
+
+    </div>
+
+    <div class="column">
+        <img src="app\static\images\doctor.jpg" alt="Doctor Image">
+        <a href="#" class="btn">Book Appointment</a>
+    </div>
+</div>
+
+<div class="what-we-do">
+    <h2>What We Do</h2>
+    <p> At PataDoc, we are more than just a digital healthcare platform; we are your gateway to a healthier, happier life. Imagine a world where finding the right healthcare specialist is as easy as a few clicks. PataDoc brings this vision to life, connecting you with a diverse array of medical experts all across Kenya. Our revolutionary platform is designed to seamlessly bridge the gap between patients and healthcare specialists, ensuring that you can easily navigate the vast landscape of healthcare services. Gone are the days of endless searches and confusing directories. We empower you to effortlessly locate and engage with the perfect healthcare specialist, making your well-being our top priority. Join us on this transformative healthcare experience, where convenience meets expertise, and your journey to optimal health begins with a simple click.
+    </p>
+</div>
+
+<section>
+    <h2>Most Sorted Services</h2>
+    <div class="services">
+        <div class="what-we-do-column">
+            <span class="top-icon">👶</span>
+            <h2>Paediatrics and Child Health</h2>
+            <p>Our dedicated paediatricians provide expert care for your little ones, ensuring their health and well-being from infancy through adolescence. Trust us to nurture the health of your most precious treasures.</p>
+            <span class="bottom-arrow" onclick="location.href='#link-to-doctors'">➡️</span>
+        </div>
+
+        <div class="what-we-do-column">
+            <span class="top-icon">⚕️</span>
+            <h2>Surgery</h2>
+            <p>Experience top-notch surgical care with our skilled and compassionate surgeons. From routine procedures to complex surgeries, we prioritize your safety and recovery at every step of the surgical journey.</p>
+            <span class="bottom-arrow" onclick="location.href='#link-to-doctors'">➡️</span>
+        </div>
+
+        <div class="what-we-do-column">
+            <span class="top-icon">🤰</span>
+            <h2>Obstetrics and Gynaecology</h2>
+            <p>Our obstetric and gynaecological experts are committed to providing comprehensive care for women's health. Whether you are expecting a new addition to your family or seeking routine women's healthcare services, we are here for you.</p>
+            <span class="bottom-arrow" onclick="location.href='#link-to-doctors'">➡️</span>
+        </div>
+    </div>
+</section>
+
+
+</body>
+</html>

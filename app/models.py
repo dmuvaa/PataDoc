@@ -33,11 +33,12 @@ class Doctor(db.Model, UserMixin):
     password_hash = db.Column(db.String, nullable=False)
     speciality = db.Column(db.String, nullable=False)
     bio = db.Column(db.String, nullable=False)
-    profile_picture_url = db.Column(db.String)
+    profile_picture_uploaded = db.Column(db.Boolean, default=False)
     license_no = db.Column(db.String, unique=True, nullable=False)
     
     appointments = db.relationship("Appointment", back_populates="doctor")
     specializations = db.relationship("DoctorSpecialization", back_populates="doctor")
+    reviews = db.relationship("Review", back_populates="doctor")
 
     def __repr__(self):
         """ Format the Doctor object"""
@@ -78,6 +79,7 @@ class Appointment(db.Model):
 
     patient = db.relationship("User")
     doctor = db.relationship("Doctor", back_populates="appointments")
+    reviews = db.relationship("Review", back_populates="appointment")
 
 class Review(db.Model):
     __tablename__ = 'reviews'
@@ -88,4 +90,6 @@ class Review(db.Model):
     comment = db.Column(db.String)
     date_posted = db.Column(db.DateTime, default=datetime.utcnow)
 
-    appointment = db.relationship("Appointment")
+    appointment = db.relationship("Appointment", back_populates="reviews")
+    doctor_id = db.Column(db.Integer, db.ForeignKey('doctors.id'), nullable=False)
+    doctor = db.relationship("Doctor", back_populates="reviews")

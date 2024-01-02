@@ -2,6 +2,31 @@
 
 {% block content %}
   <h1>Welcome, {{ current_user.first_name }}!</h1>
+  <div id="profile-picture-container" class="profile-picture-container">
+    {% if image_exists %}
+      <img
+        id="profile-picture"
+        style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover; border: 4px solid green;"
+        src="{{ url_for('static', filename='user_profile/' + user_id + '.jpg') }}"
+        alt="Profile picture"
+      />
+    {% else %}
+      <img
+        id="profile-picture"
+        style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover; border: 4px solid green;"
+        src="{{ url_for('static', filename='avatar1.png') }}"
+        alt="Avatar"
+      />
+    {% endif %}
+  </div>
+
+  <form action="/upload-profile-picture" method="post" enctype="multipart/form-data">
+  <!-- Hidden file input to trigger the file selection -->
+  <input type="file" id="image-input" name="image" accept="image/*" style="display: none;" required>
+  <input type="hidden" name="user_type" value="{{ user_type }}">
+  <!-- Hidden button to trigger form submission -->
+  <button type="submit" id="submit-button" style="display: none;"></button>
+</form>
 
   <h2>Future Appointments:</h2>
   <ul>
@@ -27,4 +52,40 @@
       </li>
     {% endfor %}
   </ul>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const profilePictureContainer = document.getElementById('profile-picture-container');
+      const fileInput = document.getElementById('image-input');
+      const submitButton = document.getElementById('submit-button');
+  
+      profilePictureContainer.addEventListener('click', function () {
+        // Trigger the file input when the profile picture is clicked
+        fileInput.click();
+      });
+  
+      fileInput.addEventListener('change', function () {
+        // Handle file selection
+        if (fileInput.files && fileInput.files[0]) {
+          const reader = new FileReader();
+  
+          reader.onload = function (e) {
+            // Update the profile picture source with the selected image
+            document.getElementById('profile-picture').src = e.target.result;
+          };
+  
+          reader.readAsDataURL(fileInput.files[0]);
+          // Trigger the form submission when a file is selected
+          submitButton.click();
+        }
+      });
+    });
+  </script>
+
+
+  {% for message in get_flashed_messages() %}
+    <div class="alert alert-{{ message[1] }}">
+      {{ message[0] }}
+    </div>
+  {% endfor %}
 {% endblock %}
+  

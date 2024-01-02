@@ -42,10 +42,7 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='styles/home.css') }}"
     />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='styles/sign_up.css') }}"
-    />
+
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='styles/edit_profile.css') }}"
@@ -81,7 +78,7 @@
           </div>
           {% if current_user.is_authenticated %}
           <a class="nav-item nav-link" id="home" href="/">
-            <img id="kody_icon" src="{{ url_for('static', filename='images/kody_icon.jpg') }}" alt="Icon">
+            <img id="app_icon" src="{{ url_for('static', filename='images/patadoc_icon.jpg') }}" alt="Icon" style="width: 32px; height: 32px;">
           </a>
           <a class="nav-item nav-link" id="aboutUs" href="/aboutUs">About Us</a>
           <a class="nav-item nav-link" id="specializations" href="/specilaizations"
@@ -93,8 +90,9 @@
           </div>
           {% else %}
           <a class="nav-item nav-link" id="home" href="/">
-            <img id="kody_icon" src="{{ url_for('static', filename='images/patadoc_icon.jpg') }}" alt="Icon">
+            <img id="app_icon" src="{{ url_for('static', filename='images/patadoc_icon.jpg') }}" alt="Icon" style="width: 32px; height: 32px;">
           </a>
+          
           <a class="nav-item nav-link" id="aboutUs" href="/aboutUs">About Us</a>
           <a class="nav-item nav-link" id="specializations" href="/specilaizations"
             >Specializations</a
@@ -202,6 +200,7 @@
             }
         }
     </script>
+
     <script>
         function redirectToLogin() {
             var role = document.getElementById("login-role").value;
@@ -214,6 +213,22 @@
             }
         }
     </script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          var flashes = document.querySelectorAll('.alert alert-danger alter-dismissable fade show .flashes li');
+          
+          flashes.forEach(function(flash) {
+              setTimeout(function() {
+                  flash.style.opacity = '0';
+                  setTimeout(function() {
+                      flash.style.display = 'none';
+                  }, 1000);
+              }, 3000);
+          });
+      });
+    </script>
+
 
     <script
       src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
