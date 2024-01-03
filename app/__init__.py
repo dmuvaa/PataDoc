@@ -26,8 +26,6 @@ def create_app():
     @login_manager.user_loader
     def load_user(user_id):
         user_type = session.get('user_type', 'user')
-        print(f'Session in load_user: {session}')
-
 
         if user_type == 'user':
             return User.query.get(int(user_id))

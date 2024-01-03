@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% block title %} {{ current_user.name }} {% endblock %}
+
 {% block content %}
   <h1>Welcome, {{ current_user.first_name }}!</h1>
   <div id="profile-picture-container" class="profile-picture-container">
@@ -20,10 +22,9 @@
     {% endif %}
   </div>
 
-  <form action="/upload-profile-picture" method="post" enctype="multipart/form-data">
+  <form action="/upload-user-picture" method="post" enctype="multipart/form-data">
   <!-- Hidden file input to trigger the file selection -->
   <input type="file" id="image-input" name="image" accept="image/*" style="display: none;" required>
-  <input type="hidden" name="user_type" value="{{ user_type }}">
   <!-- Hidden button to trigger form submission -->
   <button type="submit" id="submit-button" style="display: none;"></button>
 </form>

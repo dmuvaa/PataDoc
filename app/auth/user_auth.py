@@ -53,7 +53,6 @@ def login_patient():
                 session['user_type'] = 'user'
                 login_user(user, remember=True)
                 flash('Logged in successfully!', category='success')  
-                print(f'Session in login patient: {session}')              
                 return redirect(url_for('views.patient_profile'))
             else:
                 flash('Incorrect email or password, try again', category='error')
@@ -61,5 +60,7 @@ def login_patient():
             flash('User doesn\'t exist!! Please sign up', category='error')
     
     return render_template("login.html", user=current_user)
+
+
 
 

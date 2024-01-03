@@ -144,6 +144,7 @@ def find_doc(id) -> Optional[Doctor]:
     try:
         return session.query(Doctor).filter_by(id=id).one()
     except NoResultFound:
+        print("No results found")
         raise NoResultFound
     
 def find_patient(id) -> Optional[User]:
@@ -174,7 +175,7 @@ def save_review(appointment, rating, comment) -> bool:
         session.rollback()
         raise e
 
-def save_patient_profile(user_id, image) -> None:
+def save_patient_picture(user_id, image) -> None:
     patient = find_patient(user_id) if find_patient(user_id) else None
     print(f'Is a patient: {patient}')
 
@@ -201,8 +202,12 @@ def save_patient_profile(user_id, image) -> None:
         raise ValueError("Failed to save the image")
 
 
-def save_doctor_profile(user_id, image) -> None:
+def save_doctor_picture(user_id, image) -> None:
+    print(user_id)
     doctor = find_doc(user_id) if find_doc(user_id) else None
+    print("do we have a doctor?")
+    print(doctor)
+    print("yes")
 
     if doctor is not None:
         save_directory = os.path.join('app/static', 'doctor_profile')

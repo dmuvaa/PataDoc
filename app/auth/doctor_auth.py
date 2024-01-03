@@ -6,12 +6,6 @@ from flask_login import login_user, current_user, login_required
 from . import auth
 from werkzeug.security import check_password_hash
 
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
-
-def allowed_file(filename):
-    """ Checks whether the image file type is among the allowed extentions """
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @auth.route('/sign-up/doctor', methods=['GET', 'POST'], strict_slashes=False)
 def sign_up_doc():
@@ -45,35 +39,6 @@ def sign_up_doc():
     return render_template('doc_signup.html')
 
 
-@auth.route('/upload-profile-picture', methods=['POST'])
-@login_required
-def upload_profile_picture(user_type=None):
-    print(f'Session in upload_profile_picture: {session}')
-    if 'image' in request.files:
-        image = request.files['image']
-        user_type = request.form.get('user_type')
-        print(f'Session in upload_profile_picture: {user_type}')
-        
-        if image and allowed_file(image.filename):
-            try:
-                if user_type == 'user':
-                    save_patient_profile(current_user.id, image)
-                elif user_type == 'doctor':
-                    save_doctor_profile(current_user.id, image)
-                else:
-                    raise ValueError("Invalid user type")
-
-                flash('Profile picture uploaded successfully!', category='success')
-            except Exception as e:
-                error_msg = f"Could not upload profile picture: {e}"
-                flash(error_msg, category='error')
-        else:
-            flash('Image format is invalid!', category='error')
-
-    return redirect(url_for('views.doctor_profile'))
-
-
-
 @auth.route('/login/doctor', methods=['GET', 'POST'])
 def login_doc():
     """ Logins in the user """
@@ -86,11 +51,8 @@ def login_doc():
 
             if doctor and check_password_hash(doctor.password_hash, password):
                 session['user_type'] = 'doctor'
-                doctor.user_type = 'doctor'
                 login_user(doctor, remember=True)
                 flash('Logged in successfully!', category='success')
-                print(f'Session in login_doc: {session}')
-
                 return redirect(url_for('views.doctor_profile'))
             else:
                 flash('Incorrect email or password, try again.', category='error')
