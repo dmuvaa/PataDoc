@@ -36,6 +36,8 @@ def doctor_profile():
         reviews.append(review_info)
     return render_template('doctor_profile.html', current_user=current_user, apps=appointments, revs=reviews)
 
+@views.route('/appointment/')
+
 @views.route('/display/<int:id>')
 def display(id):
     return render_template('display.html')
