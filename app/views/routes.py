@@ -2,6 +2,7 @@ from flask import render_template, request, flash
 from . import views
 from ..db import find_patient_app, find_rev, find_doctor_app, find_doc, find_patient
 from flask_login import current_user, login_required
+import requests
 
 
 @views.route('/')
@@ -20,6 +21,13 @@ def patient_profile():
             'doctor': find_doc(appointment.id)
         }
         reviews.append(review_info)
+
+    # api_url = 'https://api.calendly.com/scheduled_events'
+    # headers = {'Authorization': f'Bearer '}
+
+    # response = requests.get(api_url, headers=headers)
+    # response.raise_for_status()
+    # appointments= response.json()
     return render_template('patient_profile.html', apps=appointments, revs=reviews)
 
 @views.route('/profile/doctor', methods=['GET'])

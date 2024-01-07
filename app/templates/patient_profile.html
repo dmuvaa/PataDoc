@@ -3,6 +3,21 @@
 {% block content %}
   <h1>Welcome, {{ current_user.first_name }}!</h1>
 
+  <!-- Calendly inline widget begin -->
+
+  <div id="calendly-embed" style="min-width:320px;height:700px;"></div>
+
+  <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js"></script>
+
+  <script>
+  Calendly.initInlineWidget({
+  url: 'https://calendly.com/epicsociety',
+  parentElement: document.getElementById('calendly-embed')
+  });
+  </script>
+
+  <!-- Calendly inline widget end -->
+
   <h2>Future Appointments:</h2>
   <ul>
     {% for appointment in apps if appointment.appointment_time > now %}
