@@ -55,6 +55,7 @@ def login_doc():
             doctor = find_doc_by(email)
 
             if doctor and check_password_hash(doctor.password_hash, password):
+                print(session)
                 session['user_type'] = 'doctor'
                 login_user(doctor, remember=True)
                 flash('Logged in successfully!', category='success')

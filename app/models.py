@@ -32,7 +32,7 @@ class Doctor(db.Model, UserMixin):
     contact = db.Column(db.String)
     password_hash = db.Column(db.String, nullable=False)
     speciality = db.Column(db.String, nullable=False)
-    bio = db.Column(db.String, nullable=False)
+    bio = db.Column(db.String)
     profile_picture_url = db.Column(db.String)
     license_no = db.Column(db.String, unique=True, nullable=False)
     
