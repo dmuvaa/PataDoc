@@ -1,5 +1,5 @@
 """ Module handles sign up and login routes """
-from flask import render_template, request, flash, redirect, url_for, session, current_app
+from flask import render_template, request, flash, redirect, url_for, session
 from ..db import *
 from flask_login import login_user, current_user, login_required
 
