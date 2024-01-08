@@ -1,0 +1,15 @@
+<!-- pending_doctors.html -->
+<h2>Pending Doctor Registrations</h2>
+<ul>
+    {% for doctor in pending_doctors %}
+        <li>
+            {{ doctor.first_name }} {{ doctor.last_name }} - {{ doctor.email }}
+            <form action="{{ url_for('views.approve_doctor', doctor_id=doctor.id) }}" method="post">
+                <input type="submit" value="Approve">
+            </form>
+            <form action="{{ url_for('views.decline_doctor', doctor_id=doctor.id) }}" method="post">
+                <input type="submit" value="Decline">
+            </form>
+        </li>
+    {% endfor %}
+</ul>

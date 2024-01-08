@@ -33,8 +33,8 @@ class Doctor(db.Model, UserMixin):
     password_hash = db.Column(db.String, nullable=False)
     speciality = db.Column(db.String, nullable=False)
     bio = db.Column(db.String)
-    profile_picture_url = db.Column(db.String)
     license_no = db.Column(db.String, unique=True, nullable=False)
+    approved = db.Column(db.Boolean, default=False)
     
     appointments = db.relationship("Appointment", back_populates="doctor")
     specializations = db.relationship("DoctorSpecialization", back_populates="doctor")
@@ -44,11 +44,11 @@ class Doctor(db.Model, UserMixin):
         return (
             "<Doctor(id={}, email={}, password_hash={}, firstname={}, "
             "lastname={}, contact={}, speciality={}, bio={}, "
-            "profile_picture_url={}, license_no{})>"
+            "license_no{}, approved={})>"
                 .format(self.id, self.email, self.password_hash,
                         self.first_name, self.last_name, self.contact,
-                        self.speciality, self.bio, self.profile_picture_url,
-                        self.license_no))
+                        self.speciality, self.bio, self.license_no,
+                        self.approved))
 
 class Specialization(db.Model):
     __tablename__ = 'specializations'

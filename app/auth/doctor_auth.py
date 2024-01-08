@@ -36,7 +36,7 @@ def sign_up_doc():
             register_doc(
                 first_name, last_name, email, contact, password, speciality,
                 bio, license_no)
-            flash('Sign up successful!', category='success')
+            flash('Approval in process. An admin will review your registration.', 'info')
             return redirect(url_for('auth.login_doc'))
         except Exception as e:
             error_msg = "Can't create Doctor: {}".format(e)
@@ -55,11 +55,13 @@ def login_doc():
             doctor = find_doc_by(email)
 
             if doctor and check_password_hash(doctor.password_hash, password):
-                print(session)
-                session['user_type'] = 'doctor'
-                login_user(doctor, remember=True)
-                flash('Logged in successfully!', category='success')
-                return redirect(url_for('views.doctor_profile'))
+                if doctor.approved == True:
+                    session['user_type'] = 'doctor'
+                    login_user(doctor, remember=True)
+                    flash('Logged in successfully!', category='success')
+                    return redirect(url_for('views.doctor_profile'))
+                else:
+                    flash('Approval in progress', category='error')
             else:
                 flash('Incorrect email or password, try again.', category='error')
         except Exception as e:
