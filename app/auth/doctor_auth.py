@@ -1,16 +1,11 @@
 """ Module handles sign up and login routes """
 from flask import render_template, request, flash, redirect, url_for, session
-from ..db import register_doc, find_doc_by
-from flask_login import login_user, current_user
+from ..db import *
+from flask_login import login_user, current_user, login_required
+
 from . import auth
 from werkzeug.security import check_password_hash
 
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
-
-def allowed_file(filename):
-    """ Checks whether the image file type is among the allowed extentions """
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @auth.route('/sign-up/doctor', methods=['GET', 'POST'], strict_slashes=False)
 def sign_up_doc():
@@ -39,10 +34,10 @@ def sign_up_doc():
             flash('Sign up successful!', category='success')
             return redirect(url_for('auth.login_doc'))
         except Exception as e:
-            error_msg = "Can't create Doctor: {}".format(e)
-            flash(error_msg, category='error')
-                
-    return render_template('doctor_sign_up.html')
+            error_msg = "Can't create Doctor profile: {}".format(e)
+            flash(error_msg, category='error')       
+    return render_template('doc_signup.html')
+
 
 @auth.route('/login/doctor', methods=['GET', 'POST'])
 def login_doc():

@@ -11,7 +11,7 @@ session = db.session
 def find_user_by(email) -> User:
     """returns the first row found in the users table
     """
-    if not email:
+    if not is_valid_email(email):
         raise ValueError
     try:
         return session.query(User).filter_by(email=email).one()
@@ -54,7 +54,8 @@ def register_user(first_name, last_name, email, contact_number, password):
                 raise ValueError("User {} already exists".format(email))
             except NoResultFound:
                 add_user(first_name, last_name, email, contact_number, password)
-        raise ValueError("{} is invalid".format(email))
+        else:
+            raise ValueError("{} is invalid".format(email))
 
 def find_doc_by(email) -> Doctor:
     """returns the first row found in the doctors table
@@ -102,7 +103,8 @@ def register_doc(
                 add_doc(
                     first_name, last_name, email, contact, password,
                     speciality, bio, license_no)
-        raise ValueError("{} is invalid".format(email))
+        else:
+            raise ValueError("{} is invalid".format(email))
 
 def find_patient_app(id) -> List[User]:
     """returns the rows found in the appointments table

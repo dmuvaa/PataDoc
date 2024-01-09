@@ -16,6 +16,7 @@ Find Doctors
                         <h2>{{ doctor.first_name }} {{ doctor.last_name }}</h2>
                         <p><strong>Specialty:</strong> {{ doctor.specialization }}</p>
                         <p><strong>Location:</strong> {{ doctor.location }}</p>
+                        <div id="map-container-{{ doctor.id }}" class="map-container"></div>
                         <p><strong>Contact:</strong> {{ doctor.contact }}</p>
                         <p>{{ doctor.bio }}</p>
                         <a href="{{ doctor.appointment_link }}" target="_blank" class="appointment-link">Book Appointment</a>

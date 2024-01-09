@@ -33,7 +33,10 @@ def sign_up_patient():
             flash('LastName missing', category='error')
         try:
             register_user(first_name, last_name, email, contact_number, password)
-            return redirect(url_for('auth.login_patient'))
+            try:
+                return redirect(url_for('auth.login_patient'))
+            except Exception:
+                print('Not redirected')
         except Exception as e:
             error_msg = "Can't create User: {}".format(e)
             flash(error_msg, category='error')
@@ -62,4 +65,3 @@ def login_patient():
             # flash(error_msg, category='error')
             print(e)
     return render_template("login.html", user=current_user)
-
