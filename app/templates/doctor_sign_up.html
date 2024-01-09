@@ -53,6 +53,16 @@
             height: 25px;
         }
 
+        select {
+            padding: 6px;
+            margin-bottom: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            width: 100%;
+            height: 30px;
+        }
+
         textarea {
             padding: 6px;
             margin-bottom: 6px;
@@ -103,10 +113,48 @@
             <input type="password" id="password" name="password" required>
 
             <label for="speciality">Speciality:</label>
-            <input type="speciality" id="speciality" name="speciality" required>
-
-            <label for="bio">Bio:</label>
-            <textarea id="bio" name="bio"></textarea>
+            <select id="speciality" name="speciality" required>
+                <option value="anaesthesia">Anaesthesia</option>
+                <option value="pathology">Pathology</option>
+                <option value="cardiothoracic">Cardiothoracic and Vascular Surgery</option>
+                <option value="clinical">Clinical Genetics and Genomics</option>
+                <option value="dermatology">Dermatology</option>
+                <option value="emergency">Emergency Medicine</option>
+                <option value="ent">ENT Surgery</option>
+                <option value="family">Family Medicine</option>
+                <option value="general">General Surgery</option>
+                <option value="immunology">Immunology</option>
+                <option value="internal">Internal Medicine</option>
+                <option value="medical">Medical Microbiology</option>
+                <option value="neurosurgery">Neurosurgery</option>
+                <option value="obstetrics">Obstetrics and Gynaecology</option>
+                <option value="occupational">Occupational Medicine</option>
+                <option value="oncology">Oncology</option>
+                <option value="opthalmology">Opthalmology</option>
+                <option value="orthopaedic">Orthopaedic Surgery</option>
+                <option value="paediatrics">Paediatrics Surgery</option>
+                <option value="child">Paediatric and Child Health</option>
+                <option value="palliative">Palliative Medicine</option>
+                <option value="plastic">Plastic and Reconstructive Surgery</option>
+                <option value="psychiatry">Psychiatry</option>
+                <option value="urology">Urology</option>
+                <option value="Radiology">Radiology</option>
+                <option value="public">Public Health</option>
+                <option value="dental">Dental and Maxillofacial Radiology</option>
+                <option value="endodontics">Endodontics</option>
+                <option value="forensic">Forensic Odontology</option>
+                <option value="advanced">Advanced Clinical Dentristry</option>
+                <option value="maxillofacial">Oral and Maxillofacial Surgery</option>
+                <option value="oral">Oral Medicine</option>
+                <option value="orthodontics">Orthodontics</option>
+                <option value="paediatric">Paediatric Dentistry</option>
+                <option value="periodontology">Periodontology</option>
+                <option value="prosthodontics">Prosthodontics</option>
+                <option value="oral surgery">Oral Surgery</option>
+                <option value="special">Special Care Dentistry</option>
+                <option value="science">Science of Dental Materials</option>
+                <option value="epidemiology">Epidemiology</option>
+            </select>
 
             <label for="license_no">License Number:</label>
             <input type="license_no" id="license_no" name="license_no" required>

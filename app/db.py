@@ -61,7 +61,7 @@ def register_user(first_name, last_name, email, contact_number, password):
 def find_doc_by(email) -> Doctor:
     """returns the first row found in the doctors table
     """
-    if not email:
+    if not is_valid_email(email):
         raise ValueError
     try:
         return session.query(Doctor).filter_by(email=email).one()
@@ -177,7 +177,7 @@ def save_review(appointment, rating, comment) -> bool:
 
 def save_patient_picture(user_id, image) -> None:
     patient = find_patient(user_id) if find_patient(user_id) else None
-    print(f'Is a patient: {patient}')
+
 
     if patient is not None:
         save_directory = os.path.join('app/static', 'user_profile')
@@ -185,7 +185,6 @@ def save_patient_picture(user_id, image) -> None:
         raise ValueError("Invalid user type for patient")
 
     try:
-        print("Trying to save image")
         os.makedirs(save_directory, exist_ok=True)
         file_extension = os.path.splitext(image.filename)[1]  # Get the file extension
         save_path = os.path.join(save_directory, f'{user_id}.jpg')
@@ -203,11 +202,9 @@ def save_patient_picture(user_id, image) -> None:
 
 
 def save_doctor_picture(user_id, image) -> None:
-    print(user_id)
+
     doctor = find_doc(user_id) if find_doc(user_id) else None
-    print("do we have a doctor?")
-    print(doctor)
-    print("yes")
+
 
     if doctor is not None:
         save_directory = os.path.join('app/static', 'doctor_profile')
@@ -215,10 +212,8 @@ def save_doctor_picture(user_id, image) -> None:
         raise ValueError("Invalid user type for doctor")
 
     try:
-        print("Trying to save image")
         os.makedirs(save_directory, exist_ok=True)
-        file_extension = os.path.splitext(image.filename)[1]  # Get the file extension
-        save_path = os.path.join(save_directory, f'{user_id}{file_extension}')
+        save_path = os.path.join(save_directory, f'{user_id}.jpg')
         image.save(save_path)
         print("Image saved successfully")
     except FileNotFoundError as e:
