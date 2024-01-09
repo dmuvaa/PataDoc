@@ -2,9 +2,10 @@ from sqlalchemy.orm.exc import NoResultFound
 from datetime import datetime
 from .models import User, Doctor, Appointment, Review
 from . import db
+import os
 from werkzeug.security import generate_password_hash
 import re
-from typing import List
+from typing import List, Optional
 
 session = db.session
 
@@ -46,16 +47,16 @@ def is_valid_email(email):
     return bool(match)
 
 def register_user(first_name, last_name, email, contact_number, password):
-        """ Check if user exists, if not, register the user
-        """
-        if is_valid_email(email.strip()):
-            try:
-                find_user_by(email=email)
-                raise ValueError("User {} already exists".format(email))
-            except NoResultFound:
-                add_user(first_name, last_name, email, contact_number, password)
-        else:
-            raise ValueError("{} is invalid".format(email))
+    """ Check if user exists, if not, register the user
+    """
+    if is_valid_email(email.strip()):
+        try:
+            find_user_by(email=email)
+            raise ValueError("User {} already exists".format(email))
+        except NoResultFound:
+            add_user(first_name, last_name, email, contact_number, password)
+    else:
+        raise ValueError("{} is invalid".format(email))
 
 def find_doc_by(email) -> Doctor:
     """returns the first row found in the doctors table
@@ -135,7 +136,7 @@ def find_doctor_app(id) -> List[Doctor]:
     except NoResultFound:
         raise NoResultFound
     
-def find_doc(id) -> Doctor:
+def find_doc(id) -> Optional[Doctor]:
     """returns the first row found in the doctors table
     """
     if not id:
@@ -143,9 +144,10 @@ def find_doc(id) -> Doctor:
     try:
         return session.query(Doctor).filter_by(id=id).one()
     except NoResultFound:
+        print("No results found")
         raise NoResultFound
     
-def find_patient(id) -> User:
+def find_patient(id) -> Optional[User]:
     """returns the first row found in the users table
     """
     if not id:
@@ -154,3 +156,79 @@ def find_patient(id) -> User:
         return session.query(User).filter_by(id=id).one()
     except NoResultFound:
         raise NoResultFound
+    
+def valid_review(doctor_id, appointment_id) -> Appointment:
+    doctor = Doctor.query.get(doctor_id)
+    appointment = Appointment.query.get(appointment_id)
+    
+    if doctor and appointment:
+        return appointment
+    else:
+        return None
+
+def save_review(appointment, rating, comment) -> bool:
+    try:
+        review = Review(appointment=appointment, rating=rating, comment=comment)
+        db.session.add(review)
+        db.session.commit()
+    except Exception as e:
+        session.rollback()
+        raise e
+
+def save_patient_picture(user_id, image) -> None:
+    patient = find_patient(user_id) if find_patient(user_id) else None
+    print(f'Is a patient: {patient}')
+
+    if patient is not None:
+        save_directory = os.path.join('app/static', 'user_profile')
+    else:
+        raise ValueError("Invalid user type for patient")
+
+    try:
+        print("Trying to save image")
+        os.makedirs(save_directory, exist_ok=True)
+        file_extension = os.path.splitext(image.filename)[1]  # Get the file extension
+        save_path = os.path.join(save_directory, f'{user_id}.jpg')
+        image.save(save_path)
+        print("Image saved successfully")
+    except FileNotFoundError as e:
+        print(f"Error: {e}")
+        raise ValueError("Invalid file path")
+    except IsADirectoryError as e:
+        print(f"Error: {e}")
+        raise ValueError("The specified path is a directory, not a file")
+    except Exception as e:
+        print(f"Error: {e}")
+        raise ValueError("Failed to save the image")
+
+
+def save_doctor_picture(user_id, image) -> None:
+    print(user_id)
+    doctor = find_doc(user_id) if find_doc(user_id) else None
+    print("do we have a doctor?")
+    print(doctor)
+    print("yes")
+
+    if doctor is not None:
+        save_directory = os.path.join('app/static', 'doctor_profile')
+    else:
+        raise ValueError("Invalid user type for doctor")
+
+    try:
+        print("Trying to save image")
+        os.makedirs(save_directory, exist_ok=True)
+        file_extension = os.path.splitext(image.filename)[1]  # Get the file extension
+        save_path = os.path.join(save_directory, f'{user_id}{file_extension}')
+        image.save(save_path)
+        print("Image saved successfully")
+    except FileNotFoundError as e:
+        print(f"Error: {e}")
+        raise ValueError("Invalid file path")
+    except IsADirectoryError as e:
+        print(f"Error: {e}")
+        raise ValueError("The specified path is a directory, not a file")
+    except Exception as e:
+        print(f"Error: {e}")
+        raise ValueError("Failed to save the image")
+
+
