@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Find Doctors
+{% endblock %}
+
+{% block content %}
+<main>
+    <section>
+        <h1>Doctors</h1>
+        <div id="doctors-container">
+            {% for doctor in doctors %}
+                <div class="doctor-card">
+                    <img src="{{ doctor.profile_picture_url }}" alt="Doctor's Profile Picture" class="doctor-image">
+                    <div class="doctor-info">
+                        <h2>{{ doctor.first_name }} {{ doctor.last_name }}</h2>
+                        <p><strong>Specialty:</strong> {{ doctor.specialization }}</p>
+                        <p><strong>Location:</strong> {{ doctor.location }}</p>
+                        <div id="map-container-{{ doctor.id }}" class="map-container"></div>
+                        <p><strong>Contact:</strong> {{ doctor.contact }}</p>
+                        <p>{{ doctor.bio }}</p>
+                        <a href="{{ doctor.appointment_link }}" target="_blank" class="appointment-link">Book Appointment</a>
+                    </div>
+                </div>
+            {% else %}
+                <p>No doctors found for the selected specialty.</p>
+            {% endfor %}
+        </div>
+    </section>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/find_doctors.js') }}"></script>
+{% endblock %}

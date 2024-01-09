@@ -1,9 +1,9 @@
-from flask import render_template, request, flash, redirect, url_for, session
+from flask import render_template, request, flash, redirect, url_for, session, jsonify
 from . import views
 import os
 from ..db import *
 from flask_login import current_user, login_required
-
+from app.models import Doctor
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
 
 def allowed_file(filename):
@@ -34,7 +34,7 @@ def patient_profile():
 @views.route('/profile/doctor', methods=['GET'])
 @login_required
 def doctor_profile():
-    """ Renders the profile page once doctor is logged in"""
+    """ Renders the profile page once doctor is logged in """
     appointments = find_doctor_app(current_user.id)
     reviews = []
     for appointment in appointments:

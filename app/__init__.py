@@ -9,6 +9,7 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 UPLOAD_FOLDER = 'static/uploads/'
 
+
 def create_app():
     load_dotenv()
     app = Flask(__name__)
