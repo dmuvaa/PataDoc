@@ -9,25 +9,29 @@
     </div>
     <div class="doctor-sections">
       <div class="doctor-row">
-        {% set counter = 0 %} {% for doctor in doctors %} {% if counter % 3 == 0 and
-        not loop.first %}
+          {% set counter = 0 %} {% for doctor in doctors %} {% if counter % 3 == 0 and
+          not loop.first %}
       </div>
       <div class="doctor-row">
-        {% endif %}
-        <div class="doctor-details">
-          <h3><a href="/doctor/{{ doctor.id }}">{{ doctor.name }}</a></h3>
-          <img
-            src="../static/doctor_profile/{{ doctor.id }}.jpg"
-            alt="Profile Picture"
-          />
-          <p>Dr.: {{ doctor.first_name }} {{ doctor.last_name }}</p>
-          <p>Speciality: {{ doctor.speciality }}</p>
-          <p>Bio: {{ doctor.bio }}</p>
-          <a href="/book_appointment/{{ doctor.id }}" class="btn">Book Appointment</a>
-        </div>
-        {% set counter = counter + 1 %} {% endfor %}
+          {% endif %}
+          <div class="doctor-details">
+              <h3><a href="/doctor/{{ doctor.id }}">{{ doctor.name }}</a></h3>
+              <img
+                  src="../static/doctor_profile/{{ doctor.id }}.jpg"
+                  alt="Profile Picture"
+              />
+              <p>Dr.: {{ doctor.first_name }} {{ doctor.last_name }}</p>
+              <p>Speciality: {{ doctor.speciality }}</p>
+              <p>Bio: {{ doctor.bio }}</p>
+              <a href="{{ doctor.calendly_link }}" target="_blank" class="btn">Appointment</a>
+              <div class="location-iframe">
+                {{ doctor.location_iframe|safe }}
+              </div>
+          </div>
+          {% set counter = counter + 1 %} {% endfor %}
       </div>
-    </div>
+  </div>
+  
   </section>
 
 {% endblock %}

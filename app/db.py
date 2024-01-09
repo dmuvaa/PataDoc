@@ -71,7 +71,7 @@ def find_doc_by(email) -> Doctor:
 
 def add_doc(
         first_name, last_name, email, contact, password, speciality,
-        bio, license_no):
+        bio, license_no, calendly_link, location_iframe):
     """ Add the doctor to the database"""
     doc = Doctor(
         first_name=first_name,
@@ -81,7 +81,9 @@ def add_doc(
         password_hash=generate_password_hash(password),  # You need to hash the password
         speciality=speciality,
         bio=bio,
-        license_no=license_no
+        license_no=license_no,
+        calendly_link=calendly_link,
+        location_iframe=location_iframe
     )
 
     try:
@@ -93,7 +95,7 @@ def add_doc(
     
 def register_doc(
         first_name, last_name, email, contact, password, speciality,
-        bio, license_no):
+        bio, license_no, calendly_link, location_iframe):
         """ Check if doctor exists, if not, register the doctor
         """
         if is_valid_email(email.strip()):
@@ -103,7 +105,7 @@ def register_doc(
             except NoResultFound:
                 add_doc(
                     first_name, last_name, email, contact, password,
-                    speciality, bio, license_no)
+                    speciality, bio, license_no, calendly_link, location_iframe)
         else:
             raise ValueError("{} is invalid".format(email))
 

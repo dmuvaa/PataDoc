@@ -34,6 +34,8 @@ class Doctor(db.Model, UserMixin):
     speciality = db.Column(db.String, nullable=False)
     bio = db.Column(db.String)
     license_no = db.Column(db.String, unique=True, nullable=False)
+    calendly_link = db.Column(db.String(1000))
+    location_iframe = db.Column(db.String(1000))
     
     appointments = db.relationship("Appointment", back_populates="doctor")
     specializations = db.relationship("DoctorSpecialization", back_populates="doctor")
@@ -44,11 +46,11 @@ class Doctor(db.Model, UserMixin):
         return (
             "<Doctor(id={}, email={}, password_hash={}, firstname={}, "
             "lastname={}, contact={}, speciality={}, bio={}, "
-            "license_no{})>"
+            "license_no{}, calendly_link={}, location_iframe={})>"
                 .format(self.id, self.email, self.password_hash,
                         self.first_name, self.last_name, self.contact,
                         self.speciality, self.bio,
-                        self.license_no))
+                        self.license_no, self.calendly_link, self.location_iframe))
 
 class Specialization(db.Model):
     __tablename__ = 'specializations'

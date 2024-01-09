@@ -26,6 +26,16 @@
   .doctor-details p {
     margin-bottom: 5px;
   }
+
+  .location-iframe {
+    /* Style the iframe */
+    width: 100%; /* Make the iframe width 100% of the container */
+    height: 200px; /* Adjust the height as needed */
+    border: none; /* Remove the iframe border */
+    overflow: hidden; /* Hide any overflow if the iframe is larger */
+    position: absolute; /* Position the iframe within the div */
+    bottom: 0; /* Place the iframe at the bottom of the div */
+  }
   
   .doctor-details img {
     width: 100%;

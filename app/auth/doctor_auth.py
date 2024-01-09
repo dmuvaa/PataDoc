@@ -31,11 +31,13 @@ def sign_up_doc():
         speciality = data.get('speciality')
         bio = data.get('bio')
         license_no = data.get('license_no')
+        calendly_link = data.get('calendly_link')
+        location_iframe = data.get('location_iframe')
 
         try:
             register_doc(
                 first_name, last_name, email, contact, password, speciality,
-                bio, license_no)
+                bio, license_no, calendly_link, location_iframe)
             flash('Sign up successful!', category='success')
             return redirect(url_for('auth.login_doc'))
         except Exception as e:
