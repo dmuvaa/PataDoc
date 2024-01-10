@@ -34,6 +34,10 @@ class Doctor(db.Model, UserMixin):
     speciality = db.Column(db.String, nullable=False)
     bio = db.Column(db.String)
     license_no = db.Column(db.String, unique=True, nullable=False)
+    approved = db.Column(db.Boolean, default=False)
+    calendly_link = db.Column(db.String, unique=True)
+    latitude = db.Column(db.Float)
+    longitude = db.Column(db.Float)
     
     appointments = db.relationship("Appointment", back_populates="doctor")
     specializations = db.relationship("DoctorSpecialization", back_populates="doctor")

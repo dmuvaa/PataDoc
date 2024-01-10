@@ -50,6 +50,7 @@ def doctor_profile():
 @views.route('/leave-review/<int:doctor_id>/<int:appointment_id>', methods=['GET', 'POST'])
 @login_required
 def leave_review(doctor_id, appointment_id):
+    """ User leaves a review"""
 
     if not valid_review(doctor_id, appointment_id):
         flash('Invalid doctor or appointment.', 'error')
@@ -74,6 +75,7 @@ def leave_review(doctor_id, appointment_id):
 @views.route('/upload-user-picture', methods=['POST'])
 @login_required
 def upload_user_picture():
+    """ Uploads user's profile picture"""
     if 'image' in request.files:
         image = request.files['image']
         
@@ -93,6 +95,7 @@ def upload_user_picture():
 @views.route('/upload-doctor-picture', methods=['POST'])
 @login_required
 def upload_doctor_picture():
+    """" Uploads doctor's profile picture """
     if 'image' in request.files:
         image = request.files['image']
         
@@ -109,13 +112,50 @@ def upload_doctor_picture():
 
     return redirect(url_for('views.doctor_profile'))
 
+
+@views.route('/update-doctor-profile', methods=['POST'])
+@login_required
+def update_doctor_profile():
+    if request.method == 'POST':
+        bio = request.form.get('bio')
+        latitude = request.form.get('latitude')
+        longitude = request.form.get('longitude')
+
+        # Update doctor's bio and location in the database
+        current_user.bio = bio
+        current_user.latitude = latitude
+        current_user.longitude = longitude
+        db.session.commit()
+
+        flash('Profile updated successfully!', category='success')
+
+    return redirect(url_for('views.doctor_profile'))
+
 @views.route('/specialists', methods=['GET'])
 def our_specialists():
+    """ Return all the specialists """
     doctors = session.query(Doctor).all()
     return render_template('specialists.html', doctors=doctors)
 
 @views.route('/book_appointment/<int:doctor_id>', methods=['POST', 'GET'])
 @login_required
 def book_appointment(doctor_id):
+    """ book appointment """
     
     return render_template('book_appointment.html')
+
+@views.route('/doctors_near_me', methods=['POST', 'GET'])
+def doctors_near_me():
+    """ Return doctors near the patient"""
+    # Assuming userLatitude and userLongitude are obtained from the frontend
+    doctors_near_user = Doctor.query.filter(
+    Doctor.latitude.isnot(None),
+    Doctor.longitude.isnot(None),
+    func.ST_DWithin(
+        func.ST_MakePoint(userLongitude, userLatitude),
+        func.ST_MakePoint(Doctor.longitude, Doctor.latitude),
+        10000  # Adjust this distance according to your needs (e.g., 10,000 meters)
+    )
+    ).all()
+    return render_template('doctors_near_me.html', doctors_near_user=doctors_near_user)
+
