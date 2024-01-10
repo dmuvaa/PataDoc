@@ -7,7 +7,22 @@ from ..models import Doctor
 from exchangelib import Credentials, Account, DELEGATE, HTMLBody, Message
 from .. import db
 import os
+from functools import wraps
+from dotenv import load_dotenv
 
+
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '..', '.env'))
+
+
+def admin_required(func):
+    @wraps(func)
+    def decorated_function(*args, **kwargs):
+        if current_user.is_authenticated:
+            return func(*args, **kwargs)
+        else:
+            flash('You do not have permission to access this page.', 'error')
+            return redirect(url_for('index'))  # Redirect to a non-admin page
+    return decorated_function
 
 @views.route('/')
 def index():
@@ -55,14 +70,15 @@ def view_pending_doctors():
     return render_template('pending_doctors.html', pending_doctors=pending_doctors)
 
 @views.route('/admin/approve_doctor/<int:doctor_id>', methods=['POST'])
-# @login_required  # Ensure only admin can access
+@login_required
+@admin_required
 def approve_doctor(doctor_id):
     doctor = Doctor.query.get_or_404(doctor_id)
     doctor.approved = True
 
     # Replace these values with your Outlook account details
-    email_address = os.getenv('EMAIL')
-    password = os.getenv('password')
+    email_address = os.getenv("EMAIL")
+    password = os.getenv("PWD")
     recipient_email = doctor.email
     subject = 'Approval Successful'
     body = 'Congratulations! Your registration has been approved successfully.'
@@ -92,13 +108,14 @@ def approve_doctor(doctor_id):
     return redirect(url_for('views.view_pending_doctors'))
 
 @views.route('/admin/decline_doctor/<int:doctor_id>', methods=['POST'])
-# @login_required  # Ensure only admin can access
+@login_required
+@admin_required
 def decline_doctor(doctor_id):
     doctor = Doctor.query.get_or_404(doctor_id)
 
     # Replace these values with your Outlook account details
-    email_address = 'patadoc@outlook.com'
-    password = '3Engineers'
+    email_address = os.getenv("EMAIL")
+    password = os.getenv("PWD")
     recipient_email = doctor.email
     subject = 'Approval Declined'
     body = 'We regret to inform you that your registration has been declined.'

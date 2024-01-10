@@ -1,4 +1,8 @@
-<!-- pending_doctors.html -->
+{% extends 'base.html' %}
+
+{% block title %} {{ current_user.name }} {% endblock %}
+
+{% block content %}
 <h2>Pending Doctor Registrations</h2>
 <ul>
     {% for doctor in pending_doctors %}
@@ -13,3 +17,4 @@
         </li>
     {% endfor %}
 </ul>
+{% endblock %}

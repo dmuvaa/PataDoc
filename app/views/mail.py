@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 
 
-load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), 'app', '.env'))
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '..', '.env'))
 email = os.getenv("EMAIL")
 print("Email:", email)
 # # Replace these values with your Outlook account details

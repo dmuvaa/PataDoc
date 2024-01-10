@@ -21,6 +21,23 @@ class User(db.Model, UserMixin):
                 .format(self.id, self.email, self.password_hash,
                         self.first_name, self.last_name, self.contact_number))
 
+class Admin(db.Model, UserMixin):
+    __tablename__ = 'admin'
+
+    id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String, nullable=False)
+    last_name = db.Column(db.String, nullable=False)
+    contact_number = db.Column(db.String)
+    email = db.Column(db.String, unique=True, nullable=False)
+    password_hash = db.Column(db.String, nullable=False)
+    date_created = db.Column(db.DateTime, default=datetime.utcnow)
+    last_login = db.Column(db.DateTime)
+
+    def __repr__(self):
+        """ Format the Admin object"""
+        return ("<Admin(id={}, email={}, password_hash={}, firstname={}, lastname={}, contact={})>"  # noqa: E501
+                .format(self.id, self.email, self.password_hash,
+                        self.first_name, self.last_name, self.contact_number))
 
 class Doctor(db.Model, UserMixin):
     __tablename__ = 'doctors'
