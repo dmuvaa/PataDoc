@@ -47,7 +47,6 @@ def is_valid_email(email):
     return bool(match)
 
 def register_user(first_name, last_name, email, contact_number, password):
-<<<<<<< HEAD
     """ Check if user exists, if not, register the user
     """
     if is_valid_email(email.strip()):
@@ -58,18 +57,6 @@ def register_user(first_name, last_name, email, contact_number, password):
             add_user(first_name, last_name, email, contact_number, password)
     else:
         raise ValueError("{} is invalid".format(email))
-=======
-        """ Check if user exists, if not, register the user
-        """
-        if is_valid_email(email.strip()):
-            try:
-                find_user_by(email=email)
-                raise ValueError("User {} already exists".format(email))
-            except NoResultFound:
-                add_user(first_name, last_name, email, contact_number, password)
-        else:
-            raise ValueError("{} is invalid".format(email))
->>>>>>> loginpri
 
 def find_doc_by(email) -> Doctor:
     """returns the first row found in the doctors table
@@ -118,11 +105,7 @@ def register_doc(
             except NoResultFound:
                 add_doc(
                     first_name, last_name, email, contact, password,
-<<<<<<< HEAD
                     speciality, bio, license_no, calendly_link, location_iframe)
-=======
-                    speciality, bio, license_no)
->>>>>>> loginpri
         else:
             raise ValueError("{} is invalid".format(email))
 
@@ -176,7 +159,6 @@ def find_patient(id) -> Optional[User]:
     except NoResultFound:
         raise NoResultFound
     
-<<<<<<< HEAD
 def valid_review(doctor_id, appointment_id) -> Appointment:
     doctor = Doctor.query.get(doctor_id)
     appointment = Appointment.query.get(appointment_id)
@@ -246,8 +228,6 @@ def save_doctor_picture(user_id, image) -> None:
         print(f"Error: {e}")
         raise ValueError("Failed to save the image")
 
-
-=======
 def find_admin_by(email) -> Admin:
     """returns the first row found in the users table
     """
@@ -288,4 +268,3 @@ def register_admin(first_name, last_name, email, contact_number, password):
                 add_admin(first_name, last_name, email, contact_number, password)
         else:
             raise ValueError("{} is invalid".format(email))
->>>>>>> loginpri

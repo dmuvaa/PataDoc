@@ -1,16 +1,10 @@
-<<<<<<< HEAD
 from flask import render_template, request, flash, redirect, url_for, session, jsonify
-=======
-from flask import render_template, request, flash, redirect, url_for
->>>>>>> loginpri
 from . import views
 import os
 from ..db import *
 from flask_login import current_user, login_required
-<<<<<<< HEAD
 from app.models import Doctor
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
-=======
 import requests
 from ..models import Doctor
 from exchangelib import Credentials, Account, DELEGATE, HTMLBody, Message
@@ -18,7 +12,6 @@ from .. import db
 import os
 from functools import wraps
 from dotenv import load_dotenv
->>>>>>> loginpri
 
 def allowed_file(filename):
     """ Checks whether the image file type is among the allowed extentions """
@@ -55,19 +48,8 @@ def patient_profile():
             'doctor': find_doc(appointment.id)
         }
         reviews.append(review_info)
-<<<<<<< HEAD
     return render_template('patient_profile.html', apps=appointments, current_user=current_user, revs=reviews, user_id=str(current_user.id),
                         image_exists=os.path.exists(f'app/static/user_profile/{current_user.id}.jpg'))
-=======
-
-    # api_url = 'https://api.calendly.com/scheduled_events'
-    # headers = {'Authorization': f'Bearer '}
-
-    # response = requests.get(api_url, headers=headers)
-    # response.raise_for_status()
-    # appointments= response.json()
-    return render_template('patient_profile.html', apps=appointments, revs=reviews)
->>>>>>> loginpri
 
 @views.route('/profile/doctor', methods=['GET'])
 @login_required
@@ -119,7 +101,6 @@ def upload_user_picture():
             try:
                 save_patient_picture(current_user.id, image)
 
-<<<<<<< HEAD
                 flash('Profile picture uploaded successfully!', category='success')
             except Exception as e:
                 error_msg = f"Could not upload profile picture: {e}"
@@ -158,7 +139,6 @@ def our_specialists():
 def book_appointment(doctor_id):
     
     return render_template('book_appointment.html')
-=======
 @views.route('/admin/pending_doctors')
 # @login_required  # Ensure only admin can access
 def view_pending_doctors():
@@ -248,4 +228,3 @@ def decline_doctor(doctor_id):
 @views.route('/display/<int:id>')
 def display(id):
     return render_template('display.html')
->>>>>>> loginpri

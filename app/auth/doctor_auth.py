@@ -37,13 +37,8 @@ def sign_up_doc():
         try:
             register_doc(
                 first_name, last_name, email, contact, password, speciality,
-<<<<<<< HEAD
                 bio, license_no, calendly_link, location_iframe)
-            flash('Sign up successful!', category='success')
-=======
-                bio, license_no)
             flash('Approval in process. An admin will review your registration.', 'info')
->>>>>>> loginpri
             return redirect(url_for('auth.login_doc'))
         except Exception as e:
             error_msg = "Can't create Doctor: {}".format(e)
@@ -64,13 +59,6 @@ def login_doc():
             print(doctor)
 
             if doctor and check_password_hash(doctor.password_hash, password):
-<<<<<<< HEAD
-                print(f"session is {session}")
-                session['user_type'] = 'doctor'
-                login_user(doctor, remember=True)
-                flash('Logged in successfully!', category='success')
-                return redirect(url_for('views.doctor_profile'))
-=======
                 if doctor.approved == True:
                     session['user_type'] = 'doctor'
                     login_user(doctor, remember=True)
@@ -78,7 +66,6 @@ def login_doc():
                     return redirect(url_for('views.doctor_profile'))
                 else:
                     flash('Approval in progress', category='error')
->>>>>>> loginpri
             else:
                 flash('Incorrect email or password, try again.', category='error')
         except Exception as e:
