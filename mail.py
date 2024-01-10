@@ -5,10 +5,12 @@ from dotenv import load_dotenv
 
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), 'app', '.env'))
 email = os.getenv("EMAIL")
+password = os.getenv("PASSWORD")
 print("Email:", email)
-# # Replace these values with your Outlook account details
-# email_address = getenv(EMAIL)
-# password = getenv(PWD)
+print("password:", password)
+# Replace these values with your Outlook account details
+# email_address = os.getenv("EMAIL")
+# password = "11Portifolio"
 # recipient_email = 'priscandiritu@outlook.com'
 # subject = 'Test Email'
 # body = 'This is a test email sent from Python using exchangelib.'
