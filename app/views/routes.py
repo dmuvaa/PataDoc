@@ -1,15 +1,42 @@
+<<<<<<< HEAD
 from flask import render_template, request, flash, redirect, url_for, session, jsonify
+=======
+from flask import render_template, request, flash, redirect, url_for
+>>>>>>> loginpri
 from . import views
 import os
 from ..db import *
 from flask_login import current_user, login_required
+<<<<<<< HEAD
 from app.models import Doctor
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
+=======
+import requests
+from ..models import Doctor
+from exchangelib import Credentials, Account, DELEGATE, HTMLBody, Message
+from .. import db
+import os
+from functools import wraps
+from dotenv import load_dotenv
+>>>>>>> loginpri
 
 def allowed_file(filename):
     """ Checks whether the image file type is among the allowed extentions """
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '..', '.env'))
+
+
+def admin_required(func):
+    @wraps(func)
+    def decorated_function(*args, **kwargs):
+        if current_user.is_authenticated:
+            return func(*args, **kwargs)
+        else:
+            flash('You do not have permission to access this page.', 'error')
+            return redirect(url_for('index'))  # Redirect to a non-admin page
+    return decorated_function
 
 @views.route('/')
 def index():
@@ -28,8 +55,19 @@ def patient_profile():
             'doctor': find_doc(appointment.id)
         }
         reviews.append(review_info)
+<<<<<<< HEAD
     return render_template('patient_profile.html', apps=appointments, current_user=current_user, revs=reviews, user_id=str(current_user.id),
                         image_exists=os.path.exists(f'app/static/user_profile/{current_user.id}.jpg'))
+=======
+
+    # api_url = 'https://api.calendly.com/scheduled_events'
+    # headers = {'Authorization': f'Bearer '}
+
+    # response = requests.get(api_url, headers=headers)
+    # response.raise_for_status()
+    # appointments= response.json()
+    return render_template('patient_profile.html', apps=appointments, revs=reviews)
+>>>>>>> loginpri
 
 @views.route('/profile/doctor', methods=['GET'])
 @login_required
@@ -81,6 +119,7 @@ def upload_user_picture():
             try:
                 save_patient_picture(current_user.id, image)
 
+<<<<<<< HEAD
                 flash('Profile picture uploaded successfully!', category='success')
             except Exception as e:
                 error_msg = f"Could not upload profile picture: {e}"
@@ -119,3 +158,94 @@ def our_specialists():
 def book_appointment(doctor_id):
     
     return render_template('book_appointment.html')
+=======
+@views.route('/admin/pending_doctors')
+# @login_required  # Ensure only admin can access
+def view_pending_doctors():
+    pending_doctors = Doctor.query.filter_by(approved=False).all()
+    return render_template('pending_doctors.html', pending_doctors=pending_doctors)
+
+@views.route('/admin/approve_doctor/<int:doctor_id>', methods=['POST'])
+@login_required
+@admin_required
+def approve_doctor(doctor_id):
+    doctor = Doctor.query.get_or_404(doctor_id)
+    doctor.approved = True
+
+    # Replace these values with your Outlook account details
+    email_address = os.getenv("EMAIL")
+    password = os.getenv("PWD")
+    recipient_email = doctor.email
+    subject = 'Approval Successful'
+    body = 'Congratulations! Your registration has been approved successfully.'
+
+    # Set up credentials
+    credentials = Credentials(email_address, password)
+
+    # Connect to the Outlook account
+    account = Account(email_address, credentials=credentials, autodiscover=True, access_type=DELEGATE)
+
+    # Create an email message
+    email = Message(
+        account=account,
+        subject=subject,
+        body=HTMLBody(body),
+        to_recipients=[recipient_email]
+    )
+
+    # Send the email
+    email.send()
+
+
+    # Commit changes to the database
+    db.session.commit()
+
+    flash('Doctor approved successfully.', 'success')
+    return redirect(url_for('views.view_pending_doctors'))
+
+@views.route('/admin/decline_doctor/<int:doctor_id>', methods=['POST'])
+@login_required
+@admin_required
+def decline_doctor(doctor_id):
+    doctor = Doctor.query.get_or_404(doctor_id)
+
+    # Replace these values with your Outlook account details
+    email_address = os.getenv("EMAIL")
+    password = os.getenv("PWD")
+    recipient_email = doctor.email
+    subject = 'Approval Declined'
+    body = 'We regret to inform you that your registration has been declined.'
+
+    # Set up credentials
+    credentials = Credentials(email_address, password)
+
+    # Connect to the Outlook account
+    account = Account(email_address, credentials=credentials, autodiscover=True, access_type=DELEGATE)
+
+    # Create an email message
+    email = Message(
+        account=account,
+        subject=subject,
+        body=HTMLBody(body),
+        to_recipients=[recipient_email]
+    )
+
+    # Send the email
+    email.send()
+
+    # Delete the doctor from the database
+    db.session.delete(doctor)
+
+    # Commit changes to the database
+    db.session.commit()
+
+    flash('Doctor declined and deleted successfully.', 'success')
+    return redirect(url_for('admin.view_pending_doctors'))
+
+
+@views.route('/appointment/')
+
+@views.route('/display/<int:id>')
+def display(id):
+    return render_template('display.html')
+>>>>>>> loginpri

@@ -24,6 +24,7 @@
     </div>
     <div class="flash-messages">
         {% with messages = get_flashed_messages(with_categories=true) %}
+<<<<<<< HEAD
         {% if messages %}
             <ul class="flashes">
             {% for category, message in messages %}
@@ -43,10 +44,34 @@
                     setTimeout(function() {
                         flash.style.display = 'none';
                     }, 1000);
+=======
+          {% if messages %}
+            <ul class="flashes">
+              {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+        
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <script>
+        // Add a function to fade out flash messages
+        $(document).ready(function () {
+            $(".flashes").children().each(function () {
+                // Set a timeout to fade out each flash message after 3 seconds (adjust as needed)
+                setTimeout(() => {
+                    $(this).fadeOut("slow");
+>>>>>>> loginpri
                 }, 3000);
             });
         });
     </script>
+<<<<<<< HEAD
     
+=======
+>>>>>>> loginpri
 </body>
 </html>

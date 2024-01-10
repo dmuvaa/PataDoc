@@ -21,6 +21,23 @@ class User(db.Model, UserMixin):
                 .format(self.id, self.email, self.password_hash,
                         self.first_name, self.last_name, self.contact_number))
 
+class Admin(db.Model, UserMixin):
+    __tablename__ = 'admin'
+
+    id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String, nullable=False)
+    last_name = db.Column(db.String, nullable=False)
+    contact_number = db.Column(db.String)
+    email = db.Column(db.String, unique=True, nullable=False)
+    password_hash = db.Column(db.String, nullable=False)
+    date_created = db.Column(db.DateTime, default=datetime.utcnow)
+    last_login = db.Column(db.DateTime)
+
+    def __repr__(self):
+        """ Format the Admin object"""
+        return ("<Admin(id={}, email={}, password_hash={}, firstname={}, lastname={}, contact={})>"  # noqa: E501
+                .format(self.id, self.email, self.password_hash,
+                        self.first_name, self.last_name, self.contact_number))
 
 class Doctor(db.Model, UserMixin):
     __tablename__ = 'doctors'
@@ -34,8 +51,12 @@ class Doctor(db.Model, UserMixin):
     speciality = db.Column(db.String, nullable=False)
     bio = db.Column(db.String)
     license_no = db.Column(db.String, unique=True, nullable=False)
+<<<<<<< HEAD
     calendly_link = db.Column(db.String(1000))
     location_iframe = db.Column(db.String(1000))
+=======
+    approved = db.Column(db.Boolean, default=False)
+>>>>>>> loginpri
     
     appointments = db.relationship("Appointment", back_populates="doctor")
     specializations = db.relationship("DoctorSpecialization", back_populates="doctor")
@@ -46,11 +67,19 @@ class Doctor(db.Model, UserMixin):
         return (
             "<Doctor(id={}, email={}, password_hash={}, firstname={}, "
             "lastname={}, contact={}, speciality={}, bio={}, "
+<<<<<<< HEAD
             "license_no{}, calendly_link={}, location_iframe={})>"
                 .format(self.id, self.email, self.password_hash,
                         self.first_name, self.last_name, self.contact,
                         self.speciality, self.bio,
                         self.license_no, self.calendly_link, self.location_iframe))
+=======
+            "license_no{}, approved={})>"
+                .format(self.id, self.email, self.password_hash,
+                        self.first_name, self.last_name, self.contact,
+                        self.speciality, self.bio, self.license_no,
+                        self.approved))
+>>>>>>> loginpri
 
 class Specialization(db.Model):
     __tablename__ = 'specializations'

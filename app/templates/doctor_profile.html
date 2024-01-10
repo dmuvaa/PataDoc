@@ -5,6 +5,7 @@
 {% block content %}
   <h1>Welcome, Dr.{{ current_user.first_name }} {{ current_user.last_name }}!</h1>
 
+<<<<<<< HEAD
   <div id="profile-picture-container" class="profile-picture-container">
 ]    {% if image_exists %}
       <img
@@ -31,6 +32,10 @@
   <button type="submit" id="submit-button" style="display: none;"></button>
 </form>
 
+=======
+  <!-- <iframe src="https://calendar.google.com/calendar/embed?src=183c0ea5390b7520310ea2ffe395dff330910f10e8d66d84ae716b0dece57ef9%40group.calendar.google.com&ctz=UTC" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe> -->
+  
+>>>>>>> loginpri
   <h2>Future Appointments:</h2>
   <ul>
     {% for appointment in apps if appointment.appointment_time > now %}
