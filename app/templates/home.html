@@ -8,12 +8,12 @@
             <h2>Find your Doctor or Take Appointments</h2>
             <p>Explore our services to find the right practitioner for you.</p>
             <a href="/specialists" class="btn">Book Appointment</a>
-            <a href="#" class="btn">Learn More</a>
-        </div>
+            <button class="btn" onclick="scrollToSection('aboutus')">About Us</button>
+        </div> 
 
         <div class="column">
             <img src="{{ url_for('static', filename='images/doctor.jpg') }}"  alt="Doctor Image">
-            <a href="#" class="btn">Book Appointment</a>
+            <a href="/specialists" class="btn">Book Appointment</a>
         </div>
     </div>
 
@@ -49,10 +49,45 @@
         </div>
     </section>
 
+    <div class="hero-section" id="aboutus" style="background-color: rgb(248, 246, 243);">
+        <div class="column">
+            <h2 class="headers">About Us</h2>
+            <p>
+                We are a revolutionary digital healthcare platform designed to
+                seamlessly connect patients with a diverse range of healthcare specialists
+                across Kenya!
+            </p>
+            <h2 class="header-about-us">Our Solutions</h2>
+            <ul>
+                <li>Seamless Patient-Doctor Connection</li>
+                <p>
+                Facilitate effortless connections between patients and healthcare specialists,
+                ensuring a smooth and user-friendly experience.
+                </p>
+                <li>Personalized Healthcare Searches</li>
+                <p>
+                Utilize PataDoc's advanced search functionality to help users easily find and connect
+                with specific healthcare specialists based on their unique needs.
+                </p>
+                <li>Appointment Scheduling</li>
+                <p>
+                Streamline the appointment scheduling process, allowing users to book appointments
+                with healthcare specialists directly through the platform.
+                </p>
+            </ul>
+        </div>
+
+        <div class="column">
+            <img src="../static/images/doctor3.PNG"  alt="Doctor Image">
+            <a href="/specialists" class="btn">Book Appointment</a>
+        </div>
+    </div>
+
     <div class="Why-us">
+
     <div class="column">
         <img src="{{ url_for('static', filename='images/doctor2.jpg') }}"  alt="Doctor Image">
-        <a href="#" class="btn">Find Your Doctor</a>
+        <a href="/specialists" class="btn">Find Your Doctor</a>
     </div>
     <div class="why-us-column">
         <h2>Why PataDoc</h2>
@@ -62,9 +97,17 @@
         <p>Need assistance at any hour? PataDoc stands out with 24/7 instant support, providing you with peace of mind and timely answers to your healthcare queries.</p>
         <b>Verified Reviews</b>
         <p>PataDoc ensures transparency and credibility with verified reviews. Our community shares their experiences, empowering you to make informed choices and fostering a trusting relationship with our practitioners.</p>
-        <a href="#" class="btn">Book Appointment</a>
-        <a href="#" class="btn">Learn More</a>
+        <a href="/specialists" class="btn">Book Appointment</a>
+        <button class="btn" onclick="scrollToSection('aboutus')">Learn More</button>
     </div>
     </div>
+    <script>
+        function scrollToSection(aboutus) {
+            var section = document.getElementById(aboutus);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    </script>
 {% endblock %}
   

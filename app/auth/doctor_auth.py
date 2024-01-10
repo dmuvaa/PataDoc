@@ -56,7 +56,6 @@ def login_doc():
 
         try:
             doctor = find_doc_by(email)
-            print(doctor)
 
             if doctor and check_password_hash(doctor.password_hash, password):
                 if doctor.approved == True:

@@ -24,9 +24,10 @@
               <p>Speciality: {{ doctor.speciality }}</p>
               <p>Bio: {{ doctor.bio }}</p>
               <a href="{{ doctor.calendly_link }}" target="_blank" class="btn">Appointment</a>
-              <div class="location-iframe">
-                {{ doctor.location_iframe|safe }}
-              </div>
+              <a href="{{ doctor.location_iframe }}" >Location</a>                          
+              <!-- <div class="location-iframe" style="width: 15%; height: 15%;">
+                {{ doctor.location_iframe }}
+              </div> -->
           </div>
           {% set counter = counter + 1 %} {% endfor %}
       </div>

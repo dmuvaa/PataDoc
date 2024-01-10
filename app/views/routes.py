@@ -134,11 +134,35 @@ def our_specialists():
     doctors = session.query(Doctor).all()
     return render_template('specialists.html', doctors=doctors)
 
+@views.route('/specializations', methods=['GET'])
+def specializations():
+    specializations = session.query(Specialization).all()
+    return render_template('specializations.html', specializations=specializations)
+
 @views.route('/book_appointment/<int:doctor_id>', methods=['POST', 'GET'])
 @login_required
 def book_appointment(doctor_id):
-    
-    return render_template('book_appointment.html')
+    doctor = session.query(Doctor).filter(id=doctor_id).one()
+    return render_template('book_appointment.html', calendly=doctor.calendly_link)
+
+@views.route('/update-doctor-profile', methods=['POST'])
+@login_required
+def update_doctor_profile():
+    if request.method == 'POST':
+        bio = request.form.get('bio')
+        calendly_link = request.form.get('calendly_link')
+        location_iframe = request.form.get('location_iframe')
+
+        # Update doctor's bio and location in the database
+        current_user.bio = bio
+        current_user.calendly_link = calendly_link
+        current_user.location_iframe = location_iframe
+        db.session.commit()
+
+        flash('Profile updated successfully!', category='success')
+
+    return redirect(url_for('views.doctor_profile'))
+
 @views.route('/admin/pending_doctors')
 # @login_required  # Ensure only admin can access
 def view_pending_doctors():
@@ -154,7 +178,7 @@ def approve_doctor(doctor_id):
 
     # Replace these values with your Outlook account details
     email_address = os.getenv("EMAIL")
-    password = os.getenv("PWD")
+    password = os.getenv("PASSWORD")
     recipient_email = doctor.email
     subject = 'Approval Successful'
     body = 'Congratulations! Your registration has been approved successfully.'
@@ -176,6 +200,10 @@ def approve_doctor(doctor_id):
     # Send the email
     email.send()
 
+    try:
+        add_specialization(doctor.speciality)
+    except Exception as e:
+        print(e)
 
     # Commit changes to the database
     db.session.commit()
@@ -191,7 +219,7 @@ def decline_doctor(doctor_id):
 
     # Replace these values with your Outlook account details
     email_address = os.getenv("EMAIL")
-    password = os.getenv("PWD")
+    password = os.getenv("PASSWORD")
     recipient_email = doctor.email
     subject = 'Approval Declined'
     body = 'We regret to inform you that your registration has been declined.'
@@ -220,7 +248,7 @@ def decline_doctor(doctor_id):
     db.session.commit()
 
     flash('Doctor declined and deleted successfully.', 'success')
-    return redirect(url_for('admin.view_pending_doctors'))
+    return redirect(url_for('views.view_pending_doctors'))
 
 
 @views.route('/appointment/')

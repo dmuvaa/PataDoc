@@ -76,6 +76,12 @@ class Specialization(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
+    
+
+    def __repr__(self):
+        """ Format the Specialization object"""
+        return ("<Specialization(id={}, name={}>"
+                .format(self.id, self.name))
 
 class DoctorSpecialization(db.Model):
     __tablename__ = 'doctor_specializations'

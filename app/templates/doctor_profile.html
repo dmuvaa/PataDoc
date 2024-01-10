@@ -30,6 +30,22 @@
   <!-- Hidden button to trigger form submission -->
   <button type="submit" id="submit-button" style="display: none;"></button>
 </form>
+<form action="/update-doctor-profile" method="post" enctype="multipart/form-data">
+  <!-- ... existing form elements ... -->
+
+  <!-- Bio input field -->
+  <label for="bio">Bio:</label>
+  <textarea id="bio" name="bio" rows="4" cols="50">{{ current_user.bio }}</textarea>
+
+  <!-- Latitude input field -->
+  <label for="calendly_link">Calendly Link</label>
+  <input type="calendly_link" id="calendly_link" name="calendly_link">
+
+  <label for="location_iframe">Your Location Link</label>
+  <input type="location_iframe" id="location_iframe" name="location_iframe">
+
+  <button type="submit">Update Profile</button>
+</form>
 
   <h2>Future Appointments:</h2>
   <ul>

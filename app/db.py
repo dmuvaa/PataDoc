@@ -1,6 +1,6 @@
 from sqlalchemy.orm.exc import NoResultFound
 from datetime import datetime
-from .models import User, Doctor, Admin, Appointment, Review
+from .models import Specialization, User, Doctor, Admin, Appointment, Review
 from . import db
 import os
 from werkzeug.security import generate_password_hash
@@ -268,3 +268,43 @@ def register_admin(first_name, last_name, email, contact_number, password):
                 add_admin(first_name, last_name, email, contact_number, password)
         else:
             raise ValueError("{} is invalid".format(email))
+        
+def find_specialization_by(name):
+    """ Check if specialization is added"""
+    try:
+        return session.query(Specialization).filter_by(name=name)
+    except NoResultFound:
+        raise NoResultFound
+
+        
+def add_specialization(name):
+    """ populate specialization table"""
+
+    print("adding specialization")
+
+    specialization = Specialization(
+        name=name,
+    )
+    
+    try:
+        find_specialization_by(name=name)
+        pass
+    except NoResultFound:
+        print("adding")
+        session.add(specialization)
+        session.commit()
+        print("added")
+        
+                
+    # if service is None:
+    #     try:
+    #         print("adding")
+    #         session.add(specialization)
+    #         session.commit()
+    #         print("added")
+    #     except Exception as e:
+    #         session.rollback()
+    #         raise e
+    # else:
+    #     return None
+    
