@@ -8,9 +8,10 @@ Bring doctors closer to you
 - [Features](#features)
 - [Getting Started](#getting-started)
 - [Usage](#usage)
-- [Documentation](#documentation)
-- [Contributing](#contributing)
-- [License](#license)
+- [Directory Structire](#directory-structure)
+- [Database](#database)
+- [Contributions](#contributions)
+- [Authors](#authors)
 
 ## About
 
@@ -27,7 +28,7 @@ Bring doctors closer to you
 
 ## Getting Started
 
-### Installation
+## Installation
 
 To install and set up the PataDoc website locally, follow these steps:
 
@@ -55,7 +56,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### Usage
+## Usage
 
 To run the PataDoc website locally, follow these steps:
 
@@ -111,7 +112,7 @@ flask run
 
 5. Access the website in your browser at `http://localhost:5000`.
 
-### Directory Structure
+## Directory Structure
 
 The directory structure of the PataDoc website is as follows:
 
@@ -174,7 +175,7 @@ The directory structure of the PataDoc website is as follows:
 - The `views.py` file contains all the routes for viewing.
 - The `db.py` file contains all the assistant functions.
 
-### Database
+## Database
 
 The PataDoc website uses a PostgreSQL database managed by Flask SQLAlchemy. The database versions are in the migrations folder.
 
