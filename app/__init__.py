@@ -23,7 +23,7 @@ def create_app():
     login_manager.init_app(app)
     migrate = Migrate(app, db)
 
-    from .models import User, Doctor, Admin, Specialization, DoctorSpecialization, Appointment, Review
+    from .models import User, Doctor, Admin, Specialization, Appointment, Review
 
     @app.before_request
     def before_request():

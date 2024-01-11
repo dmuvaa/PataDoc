@@ -272,39 +272,24 @@ def register_admin(first_name, last_name, email, contact_number, password):
 def find_specialization_by(name):
     """ Check if specialization is added"""
     try:
-        return session.query(Specialization).filter_by(name=name)
+        return session.query(Specialization).filter_by(name=name).one()
     except NoResultFound:
         raise NoResultFound
 
         
 def add_specialization(name):
-    """ populate specialization table"""
-
-    print("adding specialization")
-
-    specialization = Specialization(
-        name=name,
-    )
-    
+    """ populate specialization table"""    
     try:
         find_specialization_by(name=name)
         pass
     except NoResultFound:
-        print("adding")
-        session.add(specialization)
-        session.commit()
-        print("added")
-        
-                
-    # if service is None:
-    #     try:
-    #         print("adding")
-    #         session.add(specialization)
-    #         session.commit()
-    #         print("added")
-    #     except Exception as e:
-    #         session.rollback()
-    #         raise e
-    # else:
-    #     return None
+        specialization = Specialization(
+        name=name,
+        )
+        try:
+            session.add(specialization)
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            raise e
     

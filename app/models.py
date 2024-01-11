@@ -56,7 +56,6 @@ class Doctor(db.Model, UserMixin):
     approved = db.Column(db.Boolean, default=False)
     
     appointments = db.relationship("Appointment", back_populates="doctor")
-    specializations = db.relationship("DoctorSpecialization", back_populates="doctor")
     reviews = db.relationship("Review", back_populates="doctor")
 
     def __repr__(self):
@@ -83,14 +82,6 @@ class Specialization(db.Model):
         return ("<Specialization(id={}, name={}>"
                 .format(self.id, self.name))
 
-class DoctorSpecialization(db.Model):
-    __tablename__ = 'doctor_specializations'
-
-    doctor_id = db.Column(db.Integer, db.ForeignKey('doctors.id'), primary_key=True)
-    specialization_id = db.Column(db.Integer, db.ForeignKey('specializations.id'), primary_key=True)
-
-    doctor = db.relationship("Doctor", back_populates="specializations")
-    specialization = db.relationship("Specialization")
 
 class Appointment(db.Model):
     __tablename__ = 'appointments'

@@ -134,6 +134,12 @@ def our_specialists():
     doctors = session.query(Doctor).all()
     return render_template('specialists.html', doctors=doctors)
 
+@views.route('/specializations/<int:specialization_id>/doctors', methods=['GET'])
+def doctors_by_specialization(specialization_id):
+    specialization = session.query(Specialization).get_or_404(specialization_id)
+    doctors = session.query(Doctor).filter_by(speciality=specialization.name, approved=True).all()
+    return render_template('doctors_by_specialization.html', specialization=specialization, doctors=doctors)
+
 @views.route('/specializations', methods=['GET'])
 def specializations():
     specializations = session.query(Specialization).all()
