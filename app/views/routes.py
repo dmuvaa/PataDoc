@@ -131,7 +131,15 @@ def upload_doctor_picture():
 
 @views.route('/specialists', methods=['GET'])
 def our_specialists():
-    doctors = session.query(Doctor).all()
+    search_query = request.args.get('search', '')
+    
+    if search_query:
+        doctors = session.query(Doctor).filter(
+            (Doctor.first_name.ilike(f"%{search_query}%")) |
+            (Doctor.last_name.ilike(f"%{search_query}%"))
+        ).all()
+    else:
+        doctors = session.query(Doctor).all()
     return render_template('specialists.html', doctors=doctors)
 
 @views.route('/specializations/<int:specialization_id>/doctors', methods=['GET'])
@@ -142,7 +150,12 @@ def doctors_by_specialization(specialization_id):
 
 @views.route('/specializations', methods=['GET'])
 def specializations():
-    specializations = session.query(Specialization).all()
+    search_query = request.args.get('search', '')
+    
+    if search_query:
+        specializations = session.query(Specialization).filter(Specialization.name.ilike(f"%{search_query}%")).all()
+    else:
+        specializations = session.query(Specialization).all()
     return render_template('specializations.html', specializations=specializations)
 
 @views.route('/book_appointment/<int:doctor_id>', methods=['POST', 'GET'])
