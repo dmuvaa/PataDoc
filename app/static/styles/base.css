@@ -11,7 +11,7 @@ body {
     margin-left: 10px;
     font-size: larger;
     font-weight: 700;
-
+    padding-bottom: 0;
 }
 
 .hero-section {
@@ -166,9 +166,53 @@ img {
     margin-top: 0;
     font-weight: 200;
   }
+  #sig_log {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #f8f9fa; /* Optional: Add background color */
+    padding: 10px;
+}
 
+#sel1,
+#sel2 {
+    display: flex;
+    align-items: center;
+}
+
+#sel1 label,
+#sel2 label {
+    margin-right: 10px;
+}
+
+select {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+}
+
+button {
+    padding: 8px 16px;
+    font-size: 14px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
 .footer {
     background-color: rgb(161, 148, 148);
     margin: 15px;
     padding: 20px;
+    position: relative;
+    bottom: 0;
+    padding: 10px 0;
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+    #logout {
+        flex-direction: column;
+    }
 }
