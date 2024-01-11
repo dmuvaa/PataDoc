@@ -1,7 +1,51 @@
 {% extends 'base.html' %}
 
+{% block title %} {{ current_user.name }} {% endblock %}
+
 {% block content %}
   <h1>Welcome, Dr.{{ current_user.first_name }} {{ current_user.last_name }}!</h1>
+
+  <div id="profile-picture-container" class="profile-picture-container">
+]    {% if image_exists %}
+      <img
+        id="profile-picture"
+        style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover; border: 4px solid green;"
+        src="{{ url_for('static', filename='doctor_profile/' + user_id + '.jpg') }}"
+        alt="Profile picture"
+      />
+    {% else %}
+      <img
+        id="profile-picture"
+        style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover; border: 4px solid green;"
+        src="{{ url_for('static', filename='avatar1.png') }}"
+        alt="Avatar"
+      />
+    {% endif %}
+  </div>
+
+  <form action="/upload-doctor-picture" method="post" enctype="multipart/form-data">
+  <!-- Hidden file input to trigger the file selection -->
+  <input type="file" id="image-input" name="image" accept="image/*" style="display: none;" required>
+
+  <!-- Hidden button to trigger form submission -->
+  <button type="submit" id="submit-button" style="display: none;"></button>
+</form>
+<form action="/update-doctor-profile" method="post" enctype="multipart/form-data">
+  <!-- ... existing form elements ... -->
+
+  <!-- Bio input field -->
+  <label for="bio">Bio:</label>
+  <textarea id="bio" name="bio" rows="4" cols="50">{{ current_user.bio }}</textarea>
+
+  <!-- Latitude input field -->
+  <label for="calendly_link">Calendly Link</label>
+  <input type="calendly_link" id="calendly_link" name="calendly_link">
+
+  <label for="location_iframe">Your Location Link</label>
+  <input type="location_iframe" id="location_iframe" name="location_iframe">
+
+  <button type="submit">Update Profile</button>
+</form>
 
   <h2>Future Appointments:</h2>
   <ul>
@@ -27,4 +71,48 @@
       </li>
     {% endfor %}
   </ul>
+
+  <h2>Reviews:</h2>
+  <ul>
+    {% for review in current_user.reviews %}
+      <li>
+        Rating: {{ review.rating }} - {{ review.comment }}
+      </li>
+    {% endfor %}
+  </ul>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const profilePictureContainer = document.getElementById('profile-picture-container');
+      const fileInput = document.getElementById('image-input');
+      const submitButton = document.getElementById('submit-button');
+  
+      profilePictureContainer.addEventListener('click', function () {
+        // Trigger the file input when the profile picture is clicked
+        fileInput.click();
+      });
+  
+      fileInput.addEventListener('change', function () {
+        // Handle file selection
+        if (fileInput.files && fileInput.files[0]) {
+          const reader = new FileReader();
+  
+          reader.onload = function (e) {
+            // Update the profile picture source with the selected image
+            document.getElementById('profile-picture').src = e.target.result;
+          };
+  
+          reader.readAsDataURL(fileInput.files[0]);
+          // Trigger the form submission when a file is selected
+          submitButton.click();
+        }
+      });
+    });
+  </script>
+
+
+  {% for message in get_flashed_messages() %}
+    <div class="alert alert-{{ message[1] }}">
+      {{ message[0] }}
+    </div>
+  {% endfor %}
 {% endblock %}

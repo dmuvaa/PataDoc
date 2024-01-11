@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %} Specializations {% endblock %}
+{% block content %}
+<section>
+    <div class="top">
+      <h2>List of Specializations</h2>
+      <form action="{{ url_for('views.specializations') }}" method="get">
+        <label for="search">Search Specialization:</label>
+        <input type="text" id="search" name="search">
+    </form>
+    </div>
+    <ul>
+        {% for specialization in specializations %}
+            <li><a href="{{ url_for('views.doctors_by_specialization', specialization_id=specialization.id) }}">{{ specialization.name }}</a></li>
+        {% endfor %}
+    </ul>
+  
+  </section>
+
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %} {{ current_user.name }} {% endblock %}
+
+{% block content %}
+<h2>Pending Doctor Registrations</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>License Number</th>
+            <th>Action</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for doctor in pending_doctors %}
+            <tr>
+                <td>{{ doctor.first_name }} {{ doctor.last_name }}</td>
+                <td>{{ doctor.email }}</td>
+                <td>{{ doctor.license_no }}</td>
+                <td>
+                    <form action="{{ url_for('views.approve_doctor', doctor_id=doctor.id) }}" method="post">
+                        <input type="submit" value="Approve" class="approve-button">
+                    </form>
+                </td>
+                <td>
+                    <form action="{{ url_for('views.decline_doctor', doctor_id=doctor.id) }}" method="post">
+                        <input type="submit" value="Decline" class="decline-button">
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
