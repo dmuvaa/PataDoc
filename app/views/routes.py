@@ -70,7 +70,6 @@ def doctor_profile():
 @views.route('/leave-review/<int:doctor_id>/<int:appointment_id>', methods=['GET', 'POST'])
 @login_required
 def leave_review(doctor_id, appointment_id):
-    """ User leaves a review"""
 
     if not valid_review(doctor_id, appointment_id):
         flash('Invalid doctor or appointment.', 'error')
@@ -95,7 +94,6 @@ def leave_review(doctor_id, appointment_id):
 @views.route('/upload-user-picture', methods=['POST'])
 @login_required
 def upload_user_picture():
-    """ Uploads user's profile picture"""
     if 'image' in request.files:
         image = request.files['image']
         
@@ -115,7 +113,6 @@ def upload_user_picture():
 @views.route('/upload-doctor-picture', methods=['POST'])
 @login_required
 def upload_doctor_picture():
-    """" Uploads doctor's profile picture """
     if 'image' in request.files:
         image = request.files['image']
         
@@ -129,25 +126,6 @@ def upload_doctor_picture():
                 flash(error_msg, category='error')
         else:
             flash('Image format is invalid!', category='error')
-
-    return redirect(url_for('views.doctor_profile'))
-
-
-@views.route('/update-doctor-profile', methods=['POST'])
-@login_required
-def update_doctor_profile():
-    if request.method == 'POST':
-        bio = request.form.get('bio')
-        latitude = request.form.get('latitude')
-        longitude = request.form.get('longitude')
-
-        # Update doctor's bio and location in the database
-        current_user.bio = bio
-        current_user.latitude = latitude
-        current_user.longitude = longitude
-        db.session.commit()
-
-        flash('Profile updated successfully!', category='success')
 
     return redirect(url_for('views.doctor_profile'))
 

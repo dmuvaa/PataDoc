@@ -29,10 +29,6 @@
     <button type="submit" id="submit-button" style="display: none;"></button>
   </form>
 
-<<<<<<< HEAD
-  <form action="/update-doctor-profile" method="post" enctype="multipart/form-data">
-    <!-- ... existing form elements ... -->
-=======
   <!-- Hidden button to trigger form submission -->
   <button type="submit" id="submit-button" style="display: none;"></button>
 </form>
@@ -52,24 +48,6 @@
 
   <button type="submit">Update Profile</button>
 </form>
->>>>>>> 91fc5a11eceda553cdcce90a27f8f4133a235538
-
-    <!-- Bio input field -->
-    <label for="bio">Bio:</label>
-    <textarea id="bio" name="bio" rows="4" cols="50">{{ current_user.bio }}</textarea>
-
-    <!-- Latitude input field -->
-    <label for="latitude">Latitude:</label>
-    <input type="text" id="latitude" name="latitude" value="{{ current_user.latitude }}">
-
-    <!-- Longitude input field -->
-    <label for="longitude">Longitude:</label>
-    <input type="text" id="longitude" name="longitude" value="{{ current_user.longitude }}">
-
-    <button type="submit">Update Profile</button>
-  </form>
-
-  <!-- ... rest of the content ... -->
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {

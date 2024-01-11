@@ -1,38 +1,48 @@
 {% extends 'base.html' %}
 
 {% block title %} {{ specialization.name }} {% endblock %}
+
 {% block content %}
 <section>
     <div class="top">
-      <h2>{{ specialization.name }}</h2>
-      <input type="text" placeholder="Search.." id="search-input" />
+        <h2>{{ specialization.name }}</h2>
+        <input type="text" placeholder="Search.." id="search-input" oninput="searchDoctors()" />
     </div>
     <div class="doctor-sections">
-        <div class="doctor-row">
-            {% set counter = 0 %} {% for doctor in doctors %} {% if counter % 3 == 0 and
-            not loop.first %}
-        </div>
-        <div class="doctor-row">
-            {% endif %}
-            <div class="doctor-details">
-                <h3><a href="/doctor/{{ doctor.id }}">{{ doctor.name }}</a></h3>
-                <img
-                    src="../static/doctor_profile/{{ doctor.id }}.jpg"
-                    alt="Profile Picture"
-                />
-                <p>Dr.: {{ doctor.first_name }} {{ doctor.last_name }}</p>
-                <p>Speciality: {{ doctor.speciality }}</p>
-                <p>Bio: {{ doctor.bio }}</p>
-                <a href="{{ doctor.calendly_link }}" target="_blank" class="btn">Appointment</a>
-                <a href="{{ doctor.location_iframe }}" >Location</a>                          
-                <!-- <div class="location-iframe" style="width: 15%; height: 15%;">
-                  {{ doctor.location_iframe }}
-                </div> -->
-            </div>
-            {% set counter = counter + 1 %} {% endfor %}
-        </div>
+        {% set counter = 0 %} {% for doctor in doctors %} {% if counter % 3 == 0 and not loop.first %}
     </div>
-  
-  </section>
+    <div class="doctor-row" id="doctor-list">
+        {% endif %}
+        <div class="doctor-details doctor-{{ doctor.id }}">
+            <h3><a href="/doctor/{{ doctor.id }}">{{ doctor.name }}</a></h3>
+            <img src="../static/doctor_profile/{{ doctor.id }}.jpg" alt="Profile Picture" />
+            <p>Dr.: {{ doctor.first_name }} {{ doctor.last_name }}</p>
+            <p>Speciality: {{ doctor.speciality }}</p>
+            <p>Bio: {{ doctor.bio }}</p>
+            <a href="{{ doctor.calendly_link }}" target="_blank" class="btn">Appointment</a>
+            <a href="{{ doctor.location_iframe }}">Location</a>
+        </div>
+        {% set counter = counter + 1 %} {% endfor %}
+    </div>
+</section>
 
+<script>
+function searchDoctors() {
+    var input, filter, doctors, doctorDetails, i, txtValue;
+    input = document.getElementById("search-input");
+    filter = input.value.toUpperCase();
+    doctors = document.getElementsByClassName("doctor-details");
+
+    for (i = 0; i < doctors.length; i++) {
+        doctorDetails = doctors[i];
+        txtValue = doctorDetails.textContent || doctorDetails.innerText;
+
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            doctorDetails.style.display = "";
+        } else {
+            doctorDetails.style.display = "none";
+        }
+    }
+}
+</script>
 {% endblock %}
