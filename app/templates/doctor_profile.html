@@ -57,6 +57,33 @@
 
 
   <script>
+      document.addEventListener('DOMContentLoaded', function () {
+      const profilePictureContainer = document.getElementById('profile-picture-container');
+      const fileInput = document.getElementById('image-input');
+      const submitButton = document.getElementById('submit-button');
+  
+      profilePictureContainer.addEventListener('click', function () {
+        // Trigger the file input when the profile picture is clicked
+        fileInput.click();
+      });
+  
+      fileInput.addEventListener('change', function () {
+        // Handle file selection
+        if (fileInput.files && fileInput.files[0]) {
+          const reader = new FileReader();
+  
+          reader.onload = function (e) {
+            // Update the profile picture source with the selected image
+            document.getElementById('profile-picture').src = e.target.result;
+          };
+  
+          reader.readAsDataURL(fileInput.files[0]);
+          // Trigger the form submission when a file is selected
+          submitButton.click();
+        }
+      });
+    });
+
     document.addEventListener('DOMContentLoaded', function () {
       const toggleFormButton = document.getElementById('toggle-form-button');
       const updateProfileForm = document.querySelector('.update-profile');
