@@ -4,75 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        .login-container {
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            overflow: hidden;
-            width: 100%;
-            max-width: 400px;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        h2 {
-            text-align: center;
-            color: #333;
-        }
-
-        form {
-            display: flex;
-            flex-direction: column;
-        }
-
-        label {
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #555;
-        }
-
-        input {
-            padding: 10px;
-            margin-bottom: 16px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-            width: 100%;
-        }
-
-        button {
-            background-color: #4caf50;
-            color: #fff;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        @media only screen and (max-width: 600px) {
-            .login-container {
-                max-width: 100%;
-            }
-        }
-    </style>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles/login.css') }}"
+    />
 </head>
-<body>
+<body class="login">
     <div class="login-container">
         <h2>Login</h2>
         <form method="POST">
@@ -87,28 +24,29 @@
     </div>
     <div class="flash-messages">
         {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
+        {% if messages %}
             <ul class="flashes">
-              {% for category, message in messages %}
+            {% for category, message in messages %}
                 <li class="{{ category }}">{{ message }}</li>
-              {% endfor %}
+            {% endfor %}
             </ul>
-          {% endif %}
+        {% endif %}
         {% endwith %}
-        
-    </div>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
+    </div> 
     <script>
-        // Add a function to fade out flash messages
-        $(document).ready(function () {
-            $(".flashes").children().each(function () {
-                // Set a timeout to fade out each flash message after 3 seconds (adjust as needed)
-                setTimeout(() => {
-                    $(this).fadeOut("slow");
+        document.addEventListener('DOMContentLoaded', function() {
+            var flashes = document.querySelectorAll('.flash-messages .flashes li');
+            
+            flashes.forEach(function(flash) {
+                setTimeout(function() {
+                    flash.style.opacity = '0';
+                    setTimeout(function() {
+                        flash.style.display = 'none';
+                    }, 1000);
                 }, 3000);
             });
         });
     </script>
+    
 </body>
 </html>

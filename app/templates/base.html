@@ -28,7 +28,7 @@
     />
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='styles/contact.css') }}"
+      href="{{ url_for('static', filename='styles/specialists.css') }}"
     />
     <link
       rel="stylesheet"
@@ -65,26 +65,11 @@
       </button>
       <div class="collapse navbar-collapse" id="navbar">
         <div class="navbar-nav">
-          <div class="social-icons">
-            <a class="nav-item nav-link" href="#">
-              <i class="fa fa-facebook text-primary"></i>
-              <span class="sr-only">Visit our Facebook page</span>
-            </a>
-            <a class="nav-item nav-link" href="#">
-              <i class="fa fa-twitter text-info"></i>
-              <span class="sr-only">Visit our Twitter page</span>
-            </a>
-            <a class="nav-item nav-link" href="#">
-              <i class="fa fa-instagram text-danger"></i>
-              <span class="sr-only">Visit our Instagram page</span>
-            </a>
-          </div>
           {% if current_user.is_authenticated %}
           <a class="nav-item nav-link" id="home" href="/">
-            <img id="kody_icon" src="{{ url_for('static', filename='images/kody_icon.jpg') }}" alt="Icon">
+            <img id="app_icon" src="{{ url_for('static', filename='images/patadoc_icon.jpg') }}" alt="Icon" style="width: 32px; height: 32px;">
           </a>
-          <a class="nav-item nav-link" id="aboutUs" href="/aboutUs">About Us</a>
-          <a class="nav-item nav-link" id="specializations" href="/specilaizations"
+          <a class="nav-item nav-link" id="specializations" href="/specializations"
             >Specializations</a
           >
           <a class="nav-item nav-link" id="specialists" href="/specialists">Specialists</a>
@@ -93,10 +78,10 @@
           </div>
           {% else %}
           <a class="nav-item nav-link" id="home" href="/">
-            <img id="kody_icon" src="{{ url_for('static', filename='images/patadoc_icon.jpg') }}" alt="Icon">
+            <img id="app_icon" src="{{ url_for('static', filename='images/footer-logo.PNG') }}" alt="Icon">
           </a>
-          <a class="nav-item nav-link" id="aboutUs" href="/aboutUs">About Us</a>
-          <a class="nav-item nav-link" id="specializations" href="/specilaizations"
+          
+          <a class="nav-item nav-link" id="specializations" href="/specializations"
             >Specializations</a
           >
           <a class="nav-item nav-link" id="specialists" href="/specialists">Specialists</a>
@@ -119,6 +104,7 @@
         {% endif %}
       </div>
     </nav>
+  
     {% with messages = get_flashed_messages(with_categories=true) %} {% if
     messages %} {% for category, message in messages %} {% if category ==
     'error'%}
@@ -144,7 +130,7 @@
           <!-- Links (except Logout) -->
           <div class="left">
             <p><a class="text-white mr-3" href="/">HOME</a></p>
-            <p><a class="text-white mr-3" href="/aboutUs">About Us</a></p>
+            <p><a class="text-white mr-3" id="aboutUsLink" href="#aboutus">About Us</a></p>
             <p><a class="text-white mr-3" href="/specializations">Specializations</a></p>
             <p><a class="text-white mr-3" href="/specialists">Specialists</a></p>
             <p><a class="text-white" href="/contactUs">Contact Us</a></p>
@@ -202,6 +188,7 @@
             }
         }
     </script>
+
     <script>
         function redirectToLogin() {
             var role = document.getElementById("login-role").value;
@@ -214,6 +201,22 @@
             }
         }
     </script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          var flashes = document.querySelectorAll('.alert alert-danger alter-dismissable fade show .flashes li');
+          
+          flashes.forEach(function(flash) {
+              setTimeout(function() {
+                  flash.style.opacity = '0';
+                  setTimeout(function() {
+                      flash.style.display = 'none';
+                  }, 1000);
+              }, 3000);
+          });
+      });
+    </script>
+
 
     <script
       src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
@@ -230,9 +233,30 @@
       integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
       crossorigin="anonymous"
     ></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{{ url_for('static', filename='scripts/properties.js') }}"></script>
-    <script src="{{ url_for('static', filename='scripts/agents.js') }}"></script>
-    <script src="{{ url_for('static', filename='scripts/contact.js') }}"></script>
+    <script>
+    function scrollToSection(aboutus) {
+      // Load the content of home.html into the content-container
+      var contentContainer = document.getElementById('content-container');
+      
+      // Use fetch to load the content
+      fetch('/home.html')
+        .then(response => response.text())
+        .then(html => {
+          contentContainer.innerHTML = html;
+          
+          // After loading, scroll to the target section
+          var section = document.getElementById(aboutus);
+          if (section) {
+            section.scrollIntoView({ behavior: 'smooth' });
+          }
+        });
+    }
+
+    // Handle click event for the navigation link
+    document.getElementById('aboutUsLink').addEventListener('click', function (e) {
+      e.preventDefault(); // Prevent the default behavior of the anchor tag
+      scrollToSection('aboutus');
+    });
+  </script>
   </body>
 </html>

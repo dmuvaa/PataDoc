@@ -51,36 +51,37 @@ class Doctor(db.Model, UserMixin):
     speciality = db.Column(db.String, nullable=False)
     bio = db.Column(db.String)
     license_no = db.Column(db.String, unique=True, nullable=False)
+    calendly_link = db.Column(db.String(1000))
+    location_iframe = db.Column(db.String(1000))
     approved = db.Column(db.Boolean, default=False)
     
     appointments = db.relationship("Appointment", back_populates="doctor")
-    specializations = db.relationship("DoctorSpecialization", back_populates="doctor")
+    reviews = db.relationship("Review", back_populates="doctor")
 
     def __repr__(self):
         """ Format the Doctor object"""
         return (
             "<Doctor(id={}, email={}, password_hash={}, firstname={}, "
             "lastname={}, contact={}, speciality={}, bio={}, "
-            "license_no{}, approved={})>"
+            "license_no{}, approved={}, calendly_link={}, location_iframe={})>"
                 .format(self.id, self.email, self.password_hash,
                         self.first_name, self.last_name, self.contact,
                         self.speciality, self.bio, self.license_no,
-                        self.approved))
+                        self.approved, self.calendly_link, self.location_iframe
+                        ))
 
 class Specialization(db.Model):
     __tablename__ = 'specializations'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
+    
 
-class DoctorSpecialization(db.Model):
-    __tablename__ = 'doctor_specializations'
+    def __repr__(self):
+        """ Format the Specialization object"""
+        return ("<Specialization(id={}, name={}>"
+                .format(self.id, self.name))
 
-    doctor_id = db.Column(db.Integer, db.ForeignKey('doctors.id'), primary_key=True)
-    specialization_id = db.Column(db.Integer, db.ForeignKey('specializations.id'), primary_key=True)
-
-    doctor = db.relationship("Doctor", back_populates="specializations")
-    specialization = db.relationship("Specialization")
 
 class Appointment(db.Model):
     __tablename__ = 'appointments'
@@ -95,6 +96,7 @@ class Appointment(db.Model):
 
     patient = db.relationship("User")
     doctor = db.relationship("Doctor", back_populates="appointments")
+    reviews = db.relationship("Review", back_populates="appointment")
 
 class Review(db.Model):
     __tablename__ = 'reviews'
@@ -105,4 +107,6 @@ class Review(db.Model):
     comment = db.Column(db.String)
     date_posted = db.Column(db.DateTime, default=datetime.utcnow)
 
-    appointment = db.relationship("Appointment")
+    appointment = db.relationship("Appointment", back_populates="reviews")
+    doctor_id = db.Column(db.Integer, db.ForeignKey('doctors.id'), nullable=False)
+    doctor = db.relationship("Doctor", back_populates="reviews")
