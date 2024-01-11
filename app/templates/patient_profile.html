@@ -82,6 +82,18 @@
       });
     });
   </script>
+  <script>
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        const userLatitude = position.coords.latitude;
+        const userLongitude = position.coords.longitude;
+      
+      // Send user's location to the server and retrieve nearby doctors.
+      // You can use AJAX or fetch API for this.
+    });
+  }
+
+  </script>
 
 
   {% for message in get_flashed_messages() %}
