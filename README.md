@@ -79,10 +79,13 @@ or you can simply run
 python3 -m run
 ```
 
+Save this in a .env file within your app folder
+```
 SECRET_KEY=your_secret_key
 SQLALCHEMY_DATABASE_URI=postgresql://username:password@localhost:port/patadoc
 EMAIL=your_email
 PASSWORD=your_password
+```
 
 2. Initialize the database:
 
@@ -173,9 +176,9 @@ The directory structure of the PataDoc website is as follows:
 
 ### Database
 
-The PataDoc website uses an PostgreSQL database managed by Flask SQLAlchemy. The database versions are in the migrations folder.
+The PataDoc website uses a PostgreSQL database managed by Flask SQLAlchemy. The database versions are in the migrations folder.
 
-## Contributing
+## Contributions
 
 Contributions to the PataDoc website are welcome! If you would like to contribute, please follow these steps:
 
