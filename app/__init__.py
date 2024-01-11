@@ -1,6 +1,6 @@
-from flask import Flask, session
+from flask import Flask, session, g
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, UserMixin
+from flask_login import LoginManager
 from flask_migrate import Migrate
 from dotenv import load_dotenv
 import os
@@ -9,19 +9,25 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 UPLOAD_FOLDER = 'static/uploads/'
 
+
 def create_app():
     load_dotenv()
     app = Flask(__name__)
     
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI')
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+    app.config['MAX_ADMIN_SIGNUPS'] = 3
 
     db.init_app(app)
     login_manager.init_app(app)
     migrate = Migrate(app, db)
 
-    from .models import User, Doctor, Specialization, DoctorSpecialization, Appointment, Review
+    from .models import User, Doctor, Admin, Specialization, Appointment, Review
+
+    @app.before_request
+    def before_request():
+        g.admin_signup_counter = 0
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -31,6 +37,8 @@ def create_app():
             return User.query.get(int(user_id))
         elif user_type == 'doctor':
             return Doctor.query.get(int(user_id))
+        elif user_type == 'admin':
+            return Admin.query.get(int(user_id))
         else:
             return None
     

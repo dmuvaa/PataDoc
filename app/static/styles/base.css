@@ -4,6 +4,15 @@ body {
     padding: 0;
     background-color: #ecf0f1;
 }
+.social-icons .nav-item {
+    margin-right: 3px;
+}
+.nav-item {
+    margin-left: 10px;
+    font-size: larger;
+    font-weight: 700;
+
+}
 
 .hero-section {
     display: flex;
@@ -37,7 +46,7 @@ p {
     color: #02090a;
     display: flex;
     padding: 0px;
-    text-align: center;
+    text-align: left;
 }
 
 .btn {
@@ -95,7 +104,6 @@ img {
     margin: 10px;
 }
 .bottom-arrow::before {
-    content: '';
     position: absolute;
     top: 50%;
     left: 50%;
@@ -109,7 +117,6 @@ img {
     bottom: -20px;
 }
 .bottom-arrow::after {
-    content: '';
     position: absolute;
     top: 50%;
     left: 50%;
@@ -117,4 +124,51 @@ img {
     width: 20px;
     height: 2px;
     background-color: #3498db;
+}
+
+.about-us {
+    flex: 0.9;
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem;
+    text-align: left;
+    border-radius: 0.62rem;
+    justify-content: left;
+    align-items: flex-start;
+    margin: 0.62rem;
+    font-size: 1.2em;
+  }
+  
+  .about-us p {
+    text-align: left;
+  }
+  
+  .header-about-us {
+    margin-top: 1rem;
+  }
+  
+  li {
+    text-align: left;
+    font-weight: 700;
+  }
+
+  .about-us ul {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    list-style-type: circle;
+    font-size: 0.8em;
+    margin-left: 1.2rem;
+    font-weight: 600;
+  }
+  .about-us ul p {
+    font-size: 0.9em;
+    margin-top: 0;
+    font-weight: 200;
+  }
+
+.footer {
+    background-color: rgb(161, 148, 148);
+    margin: 15px;
+    padding: 20px;
 }

@@ -21,6 +21,23 @@ class User(db.Model, UserMixin):
                 .format(self.id, self.email, self.password_hash,
                         self.first_name, self.last_name, self.contact_number))
 
+class Admin(db.Model, UserMixin):
+    __tablename__ = 'admin'
+
+    id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String, nullable=False)
+    last_name = db.Column(db.String, nullable=False)
+    contact_number = db.Column(db.String)
+    email = db.Column(db.String, unique=True, nullable=False)
+    password_hash = db.Column(db.String, nullable=False)
+    date_created = db.Column(db.DateTime, default=datetime.utcnow)
+    last_login = db.Column(db.DateTime)
+
+    def __repr__(self):
+        """ Format the Admin object"""
+        return ("<Admin(id={}, email={}, password_hash={}, firstname={}, lastname={}, contact={})>"  # noqa: E501
+                .format(self.id, self.email, self.password_hash,
+                        self.first_name, self.last_name, self.contact_number))
 
 class Doctor(db.Model, UserMixin):
     __tablename__ = 'doctors'
@@ -34,13 +51,11 @@ class Doctor(db.Model, UserMixin):
     speciality = db.Column(db.String, nullable=False)
     bio = db.Column(db.String)
     license_no = db.Column(db.String, unique=True, nullable=False)
+    calendly_link = db.Column(db.String(1000))
+    location_iframe = db.Column(db.String(1000))
     approved = db.Column(db.Boolean, default=False)
-    calendly_link = db.Column(db.String, unique=True)
-    latitude = db.Column(db.Float)
-    longitude = db.Column(db.Float)
     
     appointments = db.relationship("Appointment", back_populates="doctor")
-    specializations = db.relationship("DoctorSpecialization", back_populates="doctor")
     reviews = db.relationship("Review", back_populates="doctor")
 
     def __repr__(self):
@@ -48,26 +63,25 @@ class Doctor(db.Model, UserMixin):
         return (
             "<Doctor(id={}, email={}, password_hash={}, firstname={}, "
             "lastname={}, contact={}, speciality={}, bio={}, "
-            "license_no{})>"
+            "license_no{}, approved={}, calendly_link={}, location_iframe={})>"
                 .format(self.id, self.email, self.password_hash,
                         self.first_name, self.last_name, self.contact,
-                        self.speciality, self.bio,
-                        self.license_no))
+                        self.speciality, self.bio, self.license_no,
+                        self.approved, self.calendly_link, self.location_iframe
+                        ))
 
 class Specialization(db.Model):
     __tablename__ = 'specializations'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
+    
 
-class DoctorSpecialization(db.Model):
-    __tablename__ = 'doctor_specializations'
+    def __repr__(self):
+        """ Format the Specialization object"""
+        return ("<Specialization(id={}, name={}>"
+                .format(self.id, self.name))
 
-    doctor_id = db.Column(db.Integer, db.ForeignKey('doctors.id'), primary_key=True)
-    specialization_id = db.Column(db.Integer, db.ForeignKey('specializations.id'), primary_key=True)
-
-    doctor = db.relationship("Doctor", back_populates="specializations")
-    specialization = db.relationship("Specialization")
 
 class Appointment(db.Model):
     __tablename__ = 'appointments'

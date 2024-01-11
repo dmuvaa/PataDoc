@@ -1,15 +1,35 @@
-from flask import render_template, request, flash, redirect, url_for, session
+from flask import render_template, request, flash, redirect, url_for, session, jsonify
 from . import views
 import os
 from ..db import *
 from flask_login import current_user, login_required
-
+from app.models import Doctor
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
+import requests
+from ..models import Doctor
+from exchangelib import Credentials, Account, DELEGATE, HTMLBody, Message
+from .. import db
+import os
+from functools import wraps
+from dotenv import load_dotenv
 
 def allowed_file(filename):
     """ Checks whether the image file type is among the allowed extentions """
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '..', '.env'))
+
+
+def admin_required(func):
+    @wraps(func)
+    def decorated_function(*args, **kwargs):
+        if current_user.is_authenticated:
+            return func(*args, **kwargs)
+        else:
+            flash('You do not have permission to access this page.', 'error')
+            return redirect(url_for('index'))  # Redirect to a non-admin page
+    return decorated_function
 
 @views.route('/')
 def index():
@@ -34,7 +54,7 @@ def patient_profile():
 @views.route('/profile/doctor', methods=['GET'])
 @login_required
 def doctor_profile():
-    """ Renders the profile page once doctor is logged in"""
+    """ Renders the profile page once doctor is logged in """
     appointments = find_doctor_app(current_user.id)
     reviews = []
     for appointment in appointments:
@@ -133,29 +153,147 @@ def update_doctor_profile():
 
 @views.route('/specialists', methods=['GET'])
 def our_specialists():
-    """ Return all the specialists """
-    doctors = session.query(Doctor).all()
+    search_query = request.args.get('search', '')
+    
+    if search_query:
+        doctors = session.query(Doctor).filter(
+            (Doctor.first_name.ilike(f"%{search_query}%")) |
+            (Doctor.last_name.ilike(f"%{search_query}%"))
+        ).all()
+    else:
+        doctors = session.query(Doctor).all()
     return render_template('specialists.html', doctors=doctors)
+
+@views.route('/specializations/<int:specialization_id>/doctors', methods=['GET'])
+def doctors_by_specialization(specialization_id):
+    specialization = session.query(Specialization).get_or_404(specialization_id)
+    doctors = session.query(Doctor).filter_by(speciality=specialization.name, approved=True).all()
+    return render_template('doctors_by_specialization.html', specialization=specialization, doctors=doctors)
+
+@views.route('/specializations', methods=['GET'])
+def specializations():
+    search_query = request.args.get('search', '')
+    
+    if search_query:
+        specializations = session.query(Specialization).filter(Specialization.name.ilike(f"%{search_query}%")).all()
+    else:
+        specializations = session.query(Specialization).all()
+    return render_template('specializations.html', specializations=specializations)
 
 @views.route('/book_appointment/<int:doctor_id>', methods=['POST', 'GET'])
 @login_required
 def book_appointment(doctor_id):
-    """ book appointment """
-    
-    return render_template('book_appointment.html')
+    doctor = session.query(Doctor).filter(id=doctor_id).one()
+    return render_template('book_appointment.html', calendly=doctor.calendly_link)
 
-@views.route('/doctors_near_me', methods=['POST', 'GET'])
-def doctors_near_me():
-    """ Return doctors near the patient"""
-    # Assuming userLatitude and userLongitude are obtained from the frontend
-    doctors_near_user = Doctor.query.filter(
-    Doctor.latitude.isnot(None),
-    Doctor.longitude.isnot(None),
-    func.ST_DWithin(
-        func.ST_MakePoint(userLongitude, userLatitude),
-        func.ST_MakePoint(Doctor.longitude, Doctor.latitude),
-        10000  # Adjust this distance according to your needs (e.g., 10,000 meters)
+@views.route('/update-doctor-profile', methods=['POST'])
+@login_required
+def update_doctor_profile():
+    if request.method == 'POST':
+        bio = request.form.get('bio')
+        calendly_link = request.form.get('calendly_link')
+        location_iframe = request.form.get('location_iframe')
+
+        # Update doctor's bio and location in the database
+        current_user.bio = bio
+        current_user.calendly_link = calendly_link
+        current_user.location_iframe = location_iframe
+        db.session.commit()
+
+        flash('Profile updated successfully!', category='success')
+
+    return redirect(url_for('views.doctor_profile'))
+
+@views.route('/admin/pending_doctors')
+# @login_required  # Ensure only admin can access
+def view_pending_doctors():
+    pending_doctors = Doctor.query.filter_by(approved=False).all()
+    return render_template('pending_doctors.html', pending_doctors=pending_doctors)
+
+@views.route('/admin/approve_doctor/<int:doctor_id>', methods=['POST'])
+@login_required
+@admin_required
+def approve_doctor(doctor_id):
+    doctor = Doctor.query.get_or_404(doctor_id)
+    doctor.approved = True
+
+    # Replace these values with your Outlook account details
+    email_address = os.getenv("EMAIL")
+    password = os.getenv("PASSWORD")
+    recipient_email = doctor.email
+    subject = 'Approval Successful'
+    body = 'Congratulations! Your registration has been approved successfully.'
+
+    # Set up credentials
+    credentials = Credentials(email_address, password)
+
+    # Connect to the Outlook account
+    account = Account(email_address, credentials=credentials, autodiscover=True, access_type=DELEGATE)
+
+    # Create an email message
+    email = Message(
+        account=account,
+        subject=subject,
+        body=HTMLBody(body),
+        to_recipients=[recipient_email]
     )
-    ).all()
-    return render_template('doctors_near_me.html', doctors_near_user=doctors_near_user)
 
+    # Send the email
+    email.send()
+
+    try:
+        add_specialization(doctor.speciality)
+    except Exception as e:
+        print(e)
+
+    # Commit changes to the database
+    db.session.commit()
+
+    flash('Doctor approved successfully.', 'success')
+    return redirect(url_for('views.view_pending_doctors'))
+
+@views.route('/admin/decline_doctor/<int:doctor_id>', methods=['POST'])
+@login_required
+@admin_required
+def decline_doctor(doctor_id):
+    doctor = Doctor.query.get_or_404(doctor_id)
+
+    # Replace these values with your Outlook account details
+    email_address = os.getenv("EMAIL")
+    password = os.getenv("PASSWORD")
+    recipient_email = doctor.email
+    subject = 'Approval Declined'
+    body = 'We regret to inform you that your registration has been declined.'
+
+    # Set up credentials
+    credentials = Credentials(email_address, password)
+
+    # Connect to the Outlook account
+    account = Account(email_address, credentials=credentials, autodiscover=True, access_type=DELEGATE)
+
+    # Create an email message
+    email = Message(
+        account=account,
+        subject=subject,
+        body=HTMLBody(body),
+        to_recipients=[recipient_email]
+    )
+
+    # Send the email
+    email.send()
+
+    # Delete the doctor from the database
+    db.session.delete(doctor)
+
+    # Commit changes to the database
+    db.session.commit()
+
+    flash('Doctor declined and deleted successfully.', 'success')
+    return redirect(url_for('views.view_pending_doctors'))
+
+
+@views.route('/appointment/')
+
+@views.route('/display/<int:id>')
+def display(id):
+    return render_template('display.html')

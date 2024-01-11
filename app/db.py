@@ -1,6 +1,6 @@
 from sqlalchemy.orm.exc import NoResultFound
 from datetime import datetime
-from .models import User, Doctor, Appointment, Review
+from .models import Specialization, User, Doctor, Admin, Appointment, Review
 from . import db
 import os
 from werkzeug.security import generate_password_hash
@@ -71,7 +71,7 @@ def find_doc_by(email) -> Doctor:
 
 def add_doc(
         first_name, last_name, email, contact, password, speciality,
-        bio, license_no):
+        bio, license_no, calendly_link, location_iframe):
     """ Add the doctor to the database"""
     doc = Doctor(
         first_name=first_name,
@@ -81,7 +81,9 @@ def add_doc(
         password_hash=generate_password_hash(password),  # You need to hash the password
         speciality=speciality,
         bio=bio,
-        license_no=license_no
+        license_no=license_no,
+        calendly_link=calendly_link,
+        location_iframe=location_iframe
     )
 
     try:
@@ -93,7 +95,7 @@ def add_doc(
     
 def register_doc(
         first_name, last_name, email, contact, password, speciality,
-        bio, license_no):
+        bio, license_no, calendly_link, location_iframe):
         """ Check if doctor exists, if not, register the doctor
         """
         if is_valid_email(email.strip()):
@@ -103,7 +105,7 @@ def register_doc(
             except NoResultFound:
                 add_doc(
                     first_name, last_name, email, contact, password,
-                    speciality, bio, license_no)
+                    speciality, bio, license_no, calendly_link, location_iframe)
         else:
             raise ValueError("{} is invalid".format(email))
 
@@ -226,4 +228,68 @@ def save_doctor_picture(user_id, image) -> None:
         print(f"Error: {e}")
         raise ValueError("Failed to save the image")
 
+def find_admin_by(email) -> Admin:
+    """returns the first row found in the users table
+    """
+    if not is_valid_email(email):
+        raise ValueError
+    try:
+        return session.query(Admin).filter_by(email=email).one()
+    except NoResultFound:
+        raise NoResultFound
 
+
+def add_admin(first_name, last_name, email, contact_number, password):
+    """ create an admin """
+    admin = Admin(
+        first_name=first_name,
+        last_name=last_name,
+        email=email,
+        contact_number=contact_number,
+        password_hash=generate_password_hash(password),  # You need to hash the password
+        date_created=datetime.utcnow(),
+    )
+
+    try:
+        session.add(admin)
+        session.commit()
+    except Exception as e:
+        session.rollback()
+        raise e
+
+def register_admin(first_name, last_name, email, contact_number, password):
+        """ Check if admin exists, if not, register the admin
+        """
+        if is_valid_email(email.strip()):
+            try:
+                find_admin_by(email=email)
+                raise ValueError("Admin {} already exists".format(email))
+            except NoResultFound:
+                add_admin(first_name, last_name, email, contact_number, password)
+        else:
+            raise ValueError("{} is invalid".format(email))
+        
+def find_specialization_by(name):
+    """ Check if specialization is added"""
+    try:
+        return session.query(Specialization).filter_by(name=name).one()
+    except NoResultFound:
+        raise NoResultFound
+
+        
+def add_specialization(name):
+    """ populate specialization table"""    
+    try:
+        find_specialization_by(name=name)
+        pass
+    except NoResultFound:
+        specialization = Specialization(
+        name=name,
+        )
+        try:
+            session.add(specialization)
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            raise e
+    
