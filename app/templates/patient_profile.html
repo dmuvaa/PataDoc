@@ -30,30 +30,47 @@
 </form>
 
 
-  <h2>Future Appointments:</h2>
-  <ul>
-    {% for appointment in apps if appointment.appointment_time > now %}
-      <li>
-        {{ appointment.appointment_time }} - {{ appointment.purpose }} - Dr.{{ revs.doctor.first_name }} {{ revs.doctor.last_name }}
-      </li>
-    {% endfor %}
-  </ul>
+<h2>Future Appointments:</h2>
+<ul>
+  {% for appointment in apps if appointment.status == 'completed' %}
+    <li>
+      {{ appointment.appointment_time }} -  
+      {% if revs[loop.index0].doctor %}
+        {{ revs[loop.index0].doctor.speciality}} - Dr.{{ revs[loop.index0].doctor.first_name }} {{ revs[loop.index0].doctor.last_name }}
+      {% else %}
+        (No review found)
+      {% endif %}
+    </li>
+  {% endfor %}
+</ul>
 
-  <h2>Past Appointments:</h2>
-  <ul>
-    {% for appointment in apps if appointment.appointment_time <= now %}
-      <li>
-        {{ appointment.appointment_time }} - {{ appointment.purpose }} - Dr.{{ revs.doctor.first_name }} {{ revs.doctor.last_name }}
-        <ul>
-          {% for review in revs[loop.index0] %}
+<h2>Past Appointments:</h2>
+<ul>
+  {% for appointment in apps if appointment.status == 'scheduled' %}
+    <li>
+      {{ appointment.appointment_time }} -  
+      {% if revs[loop.index0].doctor %}
+        {{ revs[loop.index0].doctor.speciality}} - Dr.{{ revs[loop.index0].doctor.first_name }} {{ revs[loop.index0].doctor.last_name }}
+      {% else %}
+        (No doctor information found)
+      {% endif %}
+      <ul>
+        {% if revs[loop.index0].review is not none %}
+          {% for review in revs[loop.index0].review %}
             <li>
               Rating: {{ review.rating }} - {{ review.comment }}
             </li>
           {% endfor %}
-        </ul>
-      </li>
-    {% endfor %}
-  </ul>
+        {% else %}
+          <li>No reviews found</li>
+          <a href="/leave-review/{{ revs[loop.index0].doctor.id }}/{{ appointment.id }}">Review the appointment</a>
+        {% endif %}
+      </ul>
+    </li>
+  {% endfor %}
+</ul>
+
+
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const profilePictureContainer = document.getElementById('profile-picture-container');

@@ -43,9 +43,19 @@ def patient_profile():
     appointments = find_patient_app(current_user.id)
     reviews = []
     for appointment in appointments:
+        try:
+            review = find_rev(appointment.id)
+        except NoResultFound:
+            review = None
+
+        try:
+            doctor = find_doc(appointment.id)
+        except NoResultFound:
+            doctor = None
+
         review_info = {
-            'review': find_rev(appointment.id),
-            'doctor': find_doc(appointment.id)
+            'review': review,
+            'doctor': doctor
         }
         reviews.append(review_info)
     return render_template('patient_profile.html', apps=appointments, current_user=current_user, revs=reviews, user_id=str(current_user.id),
@@ -74,13 +84,15 @@ def leave_review(doctor_id, appointment_id):
     if not valid_review(doctor_id, appointment_id):
         flash('Invalid doctor or appointment.', 'error')
         return redirect(url_for('views.index'))
+    
+    appointment = valid_review(doctor_id, appointment_id)
+    doctor = find_doctor_app(doctor_id)
 
     if request.method == 'POST':
         rating = float(request.form.get('rating'))
         comment = request.form.get('comment')
 
-        appointment = valid_review(doctor_id, appointment_id)
-        doctor = find_doctor_app(doctor_id)
+
         try:
             save_review(appointment, rating, comment)
             flash('Review submitted successfully!', 'success')

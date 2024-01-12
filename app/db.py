@@ -124,7 +124,7 @@ def find_rev(appointment_id):
     if not appointment_id:
         raise ValueError
     try:
-        return session.query(Review).filter_by(appointment_id).one()
+        return session.query(Review).filter_by(appointment_id=appointment_id).one()
     except NoResultFound:
         raise NoResultFound
 
