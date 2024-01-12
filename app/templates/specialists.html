@@ -4,38 +4,81 @@
 {% block content %}
 <section>
     <div class="top">
-      <h2>Our Specialists:</h2>
-      <form action="{{ url_for('views.our_specialists') }}" method="get">
-        <label for="search">Search Specialization:</label>
-        <input type="text" id="search" name="search">
-    </form>
+        <h2>Our Specialists:</h2>
+        <form action="{{ url_for('views.our_specialists') }}" method="get">
+            <label for="search">Search Specialization:</label>
+            <input type="text" id="search" name="search">
+            <label for="specialization">Select Specialization:</label>
+            <select id="specialization" name="specialization">
+                <option value="">All Specializations</option>
+                <option value="Anaesthesia">Anaesthesia</option>
+                <option value="Pathology">Pathology</option>
+                <option value="Cardiothoracic and Vascular Surgery">Cardiothoracic and Vascular Surgery</option>
+                <option value="Clinical Genetics and Genomics">Clinical Genetics and Genomics</option>
+                <option value="Dermatology">Dermatology</option>
+                <option value="Emergency Medicine">Emergency Medicine</option>
+                <option value="ENT Surgery">ENT Surgery</option>
+                <option value="Family Medicine">Family Medicine</option>
+                <option value="General Surgery">General Surgery</option>
+                <option value="Immunology">Immunology</option>
+                <option value="Internal Medicine">Internal Medicine</option>
+                <option value="Medical Microbiology">Medical Microbiology</option>
+                <option value="Neurosurgery">Neurosurgery</option>
+                <option value="Obstetrics and Gynaecology">Obstetrics and Gynaecology</option>
+                <option value="Occupational Medicine">Occupational Medicine</option>
+                <option value="Oncology">Oncology</option>
+                <option value="Opthalmology">Opthalmology</option>
+                <option value="Orthopaedic Surgery">Orthopaedic Surgery</option>
+                <option value="Paediatrics Surgery">Paediatrics Surgery</option>
+                <option value="Paediatric and Child Health">Paediatric and Child Health</option>
+                <option value="Palliative Medicine">Palliative Medicine</option>
+                <option value="Plastic and Reconstructive Surgery">Plastic and Reconstructive Surgery</option>
+                <option value="Psychiatry">Psychiatry</option>
+                <option value="Urology">Urology</option>
+                <option value="Radiology">Radiology</option>
+                <option value="Public Health">Public Health</option>
+                <option value="Dental and Maxillofacial Radiology">Dental and Maxillofacial Radiology</option>
+                <option value="Endodontics">Endodontics</option>
+                <option value="Forensic Odontology">Forensic Odontology</option>
+                <option value="Advanced Clinical Dentristry">Advanced Clinical Dentristry</option>
+                <option value="Oral and Maxillofacial Surgery">Oral and Maxillofacial Surgery</option>
+                <option value="Oral Medicine">Oral Medicine</option>
+                <option value="Orthodontics">Orthodontics</option>
+                <option value="Paediatric Dentistry">Paediatric Dentistry</option>
+                <option value="Periodontology">Periodontology</option>
+                <option value="Prosthodontics">Prosthodontics</option>
+                <option value="Oral Surgery">Oral Surgery</option>
+                <option value="Special Care Dentistry">Special Care Dentistry</option>
+                <option value="Science of Dental Materials">Science of Dental Materials</option>
+                <option value="Epidemiology">Epidemiology</option>
+                <!-- Add options for all specializations here -->
+            </select>
+            <button type="submit">Search</button>
+        </form>
     </div>
     <div class="doctor-sections">
-      <div class="doctor-row">
-          {% set counter = 0 %} {% for doctor in doctors %} {% if counter % 3 == 0 and
-          not loop.first %}
-      </div>
-      <div class="doctor-row">
-          {% endif %}
-          <div class="doctor-details">
-              <h3><a href="/doctor/{{ doctor.id }}">{{ doctor.name }}</a></h3>
-              <img
-                  src="../static/doctor_profile/{{ doctor.id }}.jpg"
-                  alt="Profile Picture"
-              />
-              <p>Dr.: {{ doctor.first_name }} {{ doctor.last_name }}</p>
-              <p>Speciality: {{ doctor.speciality }}</p>
-              <p>Bio: {{ doctor.bio }}</p>
-              <a href="{{ doctor.calendly_link }}" target="_blank" class="btn">Appointment</a>
-              <a href="{{ doctor.location_iframe }}" >Location</a>                          
-              <!-- <div class="location-iframe" style="width: 15%; height: 15%;">
-                {{ doctor.location_iframe }}
-              </div> -->
-          </div>
-          {% set counter = counter + 1 %} {% endfor %}
-      </div>
-  </div>
-  
-  </section>
-
+        <div class="doctor-row">
+            {% set counter = 0 %} {% for doctor in doctors %} {% if counter % 3 == 0 and not loop.first %}
+        </div>
+        <div class="doctor-row">
+            {% endif %}
+            <div class="doctor-details">
+                <h3><a href="/doctor/{{ doctor.id }}">{{ doctor.name }}</a></h3>
+                <img
+                    src="../static/doctor_profile/{{ doctor.id }}.jpg"
+                    alt="Profile Picture"
+                />
+                <p>Dr.: {{ doctor.first_name }} {{ doctor.last_name }}</p>
+                <p>Speciality: {{ doctor.speciality }}</p>
+                <p>Bio: {{ doctor.bio }}</p>
+                <a href="{{ doctor.calendly_link }}" target="_blank" class="btn">Appointment</a>
+                <a href="{{ doctor.location_iframe }}" >Location</a>                          
+                <!-- <div class="location-iframe" style="width: 15%; height: 15%;">
+                    {{ doctor.location_iframe }}
+                </div> -->
+            </div>
+            {% set counter = counter + 1 %} {% endfor %}
+        </div>
+    </div>
+</section>
 {% endblock %}

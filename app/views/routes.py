@@ -12,6 +12,10 @@ from .. import db
 import os
 from functools import wraps
 from dotenv import load_dotenv
+import pickle
+from datetime import timedelta
+import redis
+from app import redis_client
 
 def allowed_file(filename):
     """ Checks whether the image file type is among the allowed extentions """
@@ -55,7 +59,26 @@ def patient_profile():
 @login_required
 def doctor_profile():
     """ Renders the profile page once doctor is logged in """
-    appointments = find_doctor_app(current_user.id)
+    doctor_id = current_user.id
+    cache_key = f"doctor_profile_{doctor_id}"
+
+    try:
+        cached_data = redis_client.get(cache_key)
+        if cached_data:
+            appointments, reviews = pickle.loads(cached_data)
+        else:
+            appointments, reviews = fetch_doctor_data(doctor_id)
+            redis_client.setex(cache_key, timedelta(hours=3), pickle.dumps((appointments, reviews)))
+
+    except (redis.RedisError, pickle.PickleError, KeyError):
+        appointments, reviews = fetch_doctor_data(doctor_id)
+
+    return render_template('doctor_profile.html', current_user=current_user, apps=appointments,
+                           revs=reviews, user_id=str(doctor_id),
+                           image_exists=os.path.exists(os.path.join('app/static/doctor_profile', f'{doctor_id}.jpg')))
+
+def fetch_doctor_data(doctor_id):
+    appointments = find_doctor_app(doctor_id)
     reviews = []
     for appointment in appointments:
         review_info = {
@@ -63,9 +86,8 @@ def doctor_profile():
             'patient': find_patient(appointment.id)
         }
         reviews.append(review_info)
-    return render_template('doctor_profile.html', current_user=current_user, apps=appointments,
-                           revs=reviews, user_id=str(current_user.id),
-                           image_exists=os.path.exists(f'app/static/doctor_profile/{current_user.id}.jpg'))
+    
+    return appointments, reviews
 
 @views.route('/leave-review/<int:doctor_id>/<int:appointment_id>', methods=['GET', 'POST'])
 @login_required
@@ -132,15 +154,29 @@ def upload_doctor_picture():
 @views.route('/specialists', methods=['GET'])
 def our_specialists():
     search_query = request.args.get('search', '')
-    
-    if search_query:
-        doctors = session.query(Doctor).filter(
-            (Doctor.first_name.ilike(f"%{search_query}%")) |
-            (Doctor.last_name.ilike(f"%{search_query}%"))
-        ).all()
-    else:
-        doctors = session.query(Doctor).all()
+    specialization = request.args.get('specialization', '')
+    cache_key = f"specialists_{search_query}_{specialization}"
+
+    try:
+        cached_data = redis_client.get(cache_key)
+        if cached_data:
+            doctors = pickle.loads(cached_data)
+        else:
+            raise KeyError("Data not in cache")
+    except (KeyError, redis.RedisError):
+        if search_query:
+            doctors = session.query(Doctor).filter(
+                (Doctor.first_name.ilike(f"%{search_query}%")) |
+                (Doctor.last_name.ilike(f"%{search_query}%"))
+            ).all()
+        elif specialization:
+            doctors = session.query(Doctor).filter(Doctor.speciality == specialization).all()
+        else:
+            doctors = session.query(Doctor).all()
+        redis_client.setex(cache_key, timedelta(hours=3), pickle.dumps(doctors))
+
     return render_template('specialists.html', doctors=doctors)
+
 
 @views.route('/specializations/<int:specialization_id>/doctors', methods=['GET'])
 def doctors_by_specialization(specialization_id):
@@ -201,6 +237,7 @@ def approve_doctor(doctor_id):
     recipient_email = doctor.email
     subject = 'Approval Successful'
     body = 'Congratulations! Your registration has been approved successfully.'
+    print("Email Address:", email_address)
 
     # Set up credentials
     credentials = Credentials(email_address, password)
