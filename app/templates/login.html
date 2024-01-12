@@ -21,7 +21,27 @@
 
             <button type="submit">Login</button>
         </form>
+        <div class="signup-container">
+            <label for="signup-role">Don't have an account?:</label>
+            <select id="signup-role">
+                <option value="patient">As Patient</option>
+                <option value="doctor">As Doctor</option>
+            </select>
+            <button id="auth" onclick="redirectToSignup()">Sign-Up</button>
+        </div>
     </div>
+
+    <!-- Sign-up Section -->
+    <!-- <div class="signup-container">
+        <label for="signup-role">Sign-up:</label>
+        <select id="signup-role">
+            <option value="patient">As Patient</option>
+            <option value="doctor">As Doctor</option>
+        </select>
+        <button id="auth" onclick="redirectToSignup()">Sign-Up</button>
+    </div> -->
+
+    <!-- Flash Messages -->
     <div class="flash-messages">
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -49,4 +69,16 @@
     </script>
     
 </body>
+<script>
+    function redirectToSignup() {
+        var role = document.getElementById("signup-role").value;
+        
+        // Redirect to the appropriate signup page based on the selected role
+        if (role === "patient") {
+            window.location.href = "/sign-up/patient";
+        } else if (role === "doctor") {
+            window.location.href = "/sign-up/doctor";
+        }
+    }
+</script>
 </html>
