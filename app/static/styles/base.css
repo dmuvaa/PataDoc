@@ -216,3 +216,12 @@ button {
         flex-direction: column;
     }
 }
+
+.profile-picture {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%; 
+    object-fit: cover; 
+    border: 4px solid green; 
+    margin-bottom: 40px
+}

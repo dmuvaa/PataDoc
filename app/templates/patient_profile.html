@@ -30,30 +30,69 @@
 </form>
 
 
-  <h2>Future Appointments:</h2>
-  <ul>
-    {% for appointment in apps if appointment.appointment_time > now %}
-      <li>
-        {{ appointment.appointment_time }} - {{ appointment.purpose }} - Dr.{{ revs.doctor.first_name }} {{ revs.doctor.last_name }}
-      </li>
+<h2>Future Appointments</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Appointment Time</th>
+      <th>Speciality</th>
+      <th>Doctor</th>
+      <th>Purpose</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for appointment in apps if appointment.status == 'scheduled' %}
+      <tr>
+        <td>{{ appointment.appointment_time }}</td>
+        <td>{{ revs[appointment.id].doctor.speciality }}</td>
+        <td>Dr.{{ revs[appointment.id].doctor.first_name }} {{ revs[appointment.id].doctor.last_name }}</td>
+        <td>{{ appointment.purpose }}</td>  
+      </tr>
     {% endfor %}
-  </ul>
+  </tbody>
+</table>
 
-  <h2>Past Appointments:</h2>
-  <ul>
-    {% for appointment in apps if appointment.appointment_time <= now %}
-      <li>
-        {{ appointment.appointment_time }} - {{ appointment.purpose }} - Dr.{{ revs.doctor.first_name }} {{ revs.doctor.last_name }}
-        <ul>
-          {% for review in revs[loop.index0] %}
-            <li>
-              Rating: {{ review.rating }} - {{ review.comment }}
-            </li>
-          {% endfor %}
-        </ul>
-      </li>
+<h2>Past Appointments</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Appointment Time</th>
+      <th>Speciality</th>
+      <th>Doctor</th>
+      <th>Doctor Notes</th>
+      <th>Review</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for appointment in apps if appointment.status == 'completed' %}
+      <tr>
+        <td>{{ appointment.appointment_time }}</td>
+        <td>{{ revs[appointment.id].doctor.speciality }}</td>
+        <td>Dr.{{ revs[appointment.id].doctor.first_name }} {{ revs[appointment.id].doctor.last_name }}</td>
+        <td>{{ appointment.notes }}</td>
+        <td>
+          {% if revs[appointment.id].review is not none %}
+            <div class="star-rating">
+              {% for _ in range(revs[appointment.id].review.rating) %}
+                <span class="star">&#9733;</span> <!-- Unicode character for a filled star -->
+              {% endfor %}
+              {% for _ in range(5 - revs[appointment.id].review.rating) %}
+                <span class="star">&#9734;</span> <!-- Unicode character for an outline star -->
+              {% endfor %}
+            </div>
+            {{ revs[appointment.id].review.comment }}
+          {% else %}
+            No reviews found
+            <a href="/leave-review/{{ revs[appointment.id].doctor.id }}/{{ appointment.id }}">Review the appointment</a>
+          {% endif %}
+        </td>
+      </tr>
     {% endfor %}
-  </ul>
+  </tbody>
+</table>
+
+
+
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const profilePictureContainer = document.getElementById('profile-picture-container');

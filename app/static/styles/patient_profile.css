@@ -1,0 +1,11 @@
+.star-rating {
+    font-size: 24px; /* Adjust the font size as needed */
+  }
+  
+  .star {
+    color: rgb(235, 200, 3); /* Adjust the color as needed */
+  }
+
+  h2 {
+    font-weight: bold;
+  }

@@ -98,15 +98,32 @@ class Appointment(db.Model):
     doctor = db.relationship("Doctor", back_populates="appointments")
     reviews = db.relationship("Review", back_populates="appointment")
 
+    def __repr__(self):
+        """ Format the Appointment object"""
+        return (
+            "<Appointment(id={}, patient_id={}, doctor_id={}, "
+            "appointment_time={}, status={}, purpose={}, notes={})>"
+                .format(self.id, self.patient_id, self.doctor_id,
+                        self.appointment_time, self.status, self.purpose,
+                        self.notes))
+
 class Review(db.Model):
     __tablename__ = 'reviews'
 
     id = db.Column(db.Integer, primary_key=True)
     appointment_id = db.Column(db.Integer, db.ForeignKey('appointments.id'), nullable=False)
-    rating = db.Column(db.Float)
+    rating = db.Column(db.Integer)
     comment = db.Column(db.String)
     date_posted = db.Column(db.DateTime, default=datetime.utcnow)
+    doctor_id = db.Column(db.Integer, db.ForeignKey('doctors.id'), nullable=False)
 
     appointment = db.relationship("Appointment", back_populates="reviews")
-    doctor_id = db.Column(db.Integer, db.ForeignKey('doctors.id'), nullable=False)
     doctor = db.relationship("Doctor", back_populates="reviews")
+
+    def __repr__(self):
+        """ Format the Review object"""
+        return (
+            "<Review(id={}, appointment_id={}, rating={}, "
+            "comment={}, date_posted={}, doctor_id)>"
+                .format(self.id, self.appointment_id, self.rating,
+                        self.comment, self.date_posted, self.doctor_id))

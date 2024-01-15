@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 
-{% block title %} {{ current_user.name }} {% endblock %}
+{% block title %} Dr.{{ doctor.first_name }} {{ doctor.last_name }} {% endblock %}
 
 {% block content %}
   <section class="profil_section" style="margin: 5%";>
-  <h1 style="margin-bottom: 15px;">Welcome, Dr.{{ current_user.first_name }} {{ current_user.last_name }}!</h1>
+  <h1 style="margin-bottom: 15px;">Dr.{{ doctor.first_name }} {{ doctor.last_name }}!</h1>
 
   <div id="profile-picture-container" class="profile-picture-container">
     {% if image_exists %}
@@ -23,73 +23,20 @@
       />
     {% endif %}
   </div>
-
-  <form action="/upload-doctor-picture" method="post" enctype="multipart/form-data">
-    <!-- Hidden file input to trigger the file selection -->
-    <input type="file" id="image-input" name="image" accept="image/*" style="display: none;" required>
-    <button type="submit" id="submit-button" style="display: none;"></button>
-  </form>
-  <div class="profile_details">
-    <h3 style="font-weight: bold; margin: 15px;"> Bio:
-      <p style="font-weight: 500; margin: 15px; margin-bottom: 30px;">
-        {{ current_user.bio }}
-      </p>
-    </h3>
-  </div>
-
-  <!-- Hidden button to trigger form submission -->
-  <button id="toggle-form-button">Update Your Profile</button>
-
-  <form class="update-profile" action="/update-doctor-profile" method="post" enctype="multipart/form-data" style="display: none;">
-    <!-- ... existing form elements ... -->
-    <label for="bio">Bio:</label>
-    <textarea id="bio" name="bio" rows="4" cols="50">{{ current_user.bio }}</textarea>
-    <label for="calendly_link">Calendly Link</label>
-    <input type="calendly_link" id="calendly_link" name="calendly_link">
-    <label for="location_iframe">Your Location Link</label>
-    <input type="location_iframe" id="location_iframe" name="location_iframe">
-    <button type="submit">Update Profile</button>
-  </form>
-
-
   </section>
 
-  <h2>Future Appointments</h2>
-<table>
+<h2>Reviews</h2>
+<table style="margin: 15px; width: 98%;">
   <thead>
     <tr>
-      <th>Appointment Time</th>
       <th>Patient</th>
-      <th>Purpose</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for appointment in apps if appointment.status == 'scheduled' %}
-      <tr>
-        <td>{{ appointment.appointment_time }}</td>
-        <td>{{ revs[appointment.id].patient.first_name }} {{ revs[appointment.id].patient.last_name }}</td>
-        <td>{{ appointment.purpose }}</td>  
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
-<h2>Past Appointments</h2>
-<table>
-  <thead>
-    <tr>
-      <th>Appointment Time</th>
-      <th>Patient</th>
-      <th>Notes</th>
-      <th>Review</th>
+      <th>Rating</th>
     </tr>
   </thead>
   <tbody>
     {% for appointment in apps if appointment.status == 'completed' %}
       <tr>
-        <td>{{ appointment.appointment_time }}</td>
         <td>{{ revs[appointment.id].patient.first_name }} {{ revs[appointment.id].patient.last_name }}</td>
-        <td>{{ appointment.notes }}</td>
         <td>
           {% if revs[appointment.id].review is not none %}
             <div class="star-rating">
@@ -103,7 +50,6 @@
             {{ revs[appointment.id].review.comment }}
           {% else %}
             No reviews found
-            <a href="/leave-review/{{ revs[appointment.id].doctor.id }}/{{ appointment.id }}">Review the appointment</a>
           {% endif %}
         </td>
       </tr>

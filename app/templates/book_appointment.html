@@ -5,6 +5,7 @@
 {% block content %}
 
 <!-- Calendly inline widget begin -->
+{% if current_user.is_authenticated %}
 
 <div id="calendly-embed" style="min-width:320px;height:700px;"></div>
 
@@ -17,6 +18,8 @@ parentElement: document.getElementById('calendly-embed')
 });
 </script>
 
-<!-- Calendly inline widget end -->
+{% else %}
 
+<a href="{{ url_for('auth.login') }}"> login </a>
+{% endif %}
 {% endblock %}
