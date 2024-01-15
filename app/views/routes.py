@@ -181,6 +181,7 @@ def our_specialists():
     search_query = request.args.get('search', '')
     specialization = request.args.get('specialization', '')
     cache_key = f"specialists_{search_query}_{specialization}"
+    images = {}
 
     try:
         cached_data = redis_client.get(cache_key)
@@ -198,10 +199,6 @@ def our_specialists():
             doctors = session.query(Doctor).filter(Doctor.speciality == specialization).all()
         else:
             doctors = session.query(Doctor).all()
-        redis_client.setex(cache_key, timedelta(hours=3), pickle.dumps(doctors))
-
-
-        images = {}
         for doctor in doctors:
             if os.path.exists(f'app/static/doctor_profile/{doctor.id}.jpg'):
                 image_exists = True
@@ -214,6 +211,31 @@ def our_specialists():
                 'str_id': str(doc_id)
             }
             images[doc_id] = doc_dict
+        redis_client.setex(cache_key, timedelta(hours=3), pickle.dumps(doctors))
+    else:
+        # If doctors are retrieved from the cache, check if the data needs to be updated
+        if search_query:
+            doctors = session.query(Doctor).filter(
+                (Doctor.first_name.ilike(f"%{search_query}%")) |
+                (Doctor.last_name.ilike(f"%{search_query}%"))
+            ).all()
+        elif specialization:
+            doctors = session.query(Doctor).filter(Doctor.speciality == specialization).all()
+        else:
+            doctors = session.query(Doctor).all()
+        for doctor in doctors:
+            if os.path.exists(f'app/static/doctor_profile/{doctor.id}.jpg'):
+                image_exists = True
+            else:
+                image_exists = False
+
+            doc_id = doctor.id
+            doc_dict = {
+                'image': image_exists,
+                'str_id': str(doc_id)
+            }
+            images[doc_id] = doc_dict
+        redis_client.setex(cache_key, timedelta(hours=3), pickle.dumps(doctors))
     
     return render_template('specialists.html', doctors=doctors, images=images)
 
