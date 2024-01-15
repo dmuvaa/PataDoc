@@ -4,11 +4,12 @@ from flask_login import LoginManager
 from flask_migrate import Migrate
 from dotenv import load_dotenv
 import os
+import redis
 
 db = SQLAlchemy()
 login_manager = LoginManager()
 UPLOAD_FOLDER = 'static/uploads/'
-
+redis_client = redis.Redis.from_url(os.getenv('REDIS_URL', 'redis://localhost:6379/0'))
 
 def create_app():
     load_dotenv()
