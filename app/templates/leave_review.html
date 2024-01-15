@@ -5,7 +5,7 @@
 {% block content %}
   <h1>Leave a Review for Dr. {{ doctor.first_name }} {{ doctor.last_name }}</h1>
 
-  <form action="{{ url_for('views.leave_review')}}" method="post">
+  <form action="{{ url_for('views.leave_review', doctor_id=doctor.id, appointment_id=appointment.id)}}" method="post">
     <label for="rating">Rating:</label>
     <input type="number" name="rating" min="1" max="5" step="1" required>
 

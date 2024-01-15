@@ -41,7 +41,7 @@ def patient_profile():
     """ Renders the profile page once patient is logged in"""            
 
     appointments = find_patient_app(current_user.id)
-    reviews = []
+    reviews = {}
     for appointment in appointments:
         try:
             review = find_rev(appointment.id)
@@ -49,7 +49,7 @@ def patient_profile():
             review = None
 
         try:
-            doctor = find_doc(appointment.id)
+            doctor = find_doc(appointment.doctor_id)
         except NoResultFound:
             doctor = None
 
@@ -57,7 +57,9 @@ def patient_profile():
             'review': review,
             'doctor': doctor
         }
-        reviews.append(review_info)
+        app_id = appointment.id
+        reviews[app_id] = review_info
+
     return render_template('patient_profile.html', apps=appointments, current_user=current_user, revs=reviews, user_id=str(current_user.id),
                         image_exists=os.path.exists(f'app/static/user_profile/{current_user.id}.jpg'))
 
@@ -66,13 +68,25 @@ def patient_profile():
 def doctor_profile():
     """ Renders the profile page once doctor is logged in """
     appointments = find_doctor_app(current_user.id)
-    reviews = []
+    reviews = {}
     for appointment in appointments:
+        try:
+            review = find_rev(appointment.id)
+        except NoResultFound:
+            review = None
+
+        try:
+            patient = find_patient(appointment.patient_id)
+        except NoResultFound:
+            patient = None
+
         review_info = {
-            'review': find_rev(appointment.id),
-            'patient': find_patient(appointment.id)
+            'review': review,
+            'patient': patient
         }
-        reviews.append(review_info)
+        app_id = appointment.id
+        reviews[app_id] = review_info
+
     return render_template('doctor_profile.html', current_user=current_user, apps=appointments,
                            revs=reviews, user_id=str(current_user.id),
                            image_exists=os.path.exists(f'app/static/doctor_profile/{current_user.id}.jpg'))
@@ -83,10 +97,10 @@ def leave_review(doctor_id, appointment_id):
 
     if not valid_review(doctor_id, appointment_id):
         flash('Invalid doctor or appointment.', 'error')
-        return redirect(url_for('views.index'))
+        return redirect(url_for('views.patient_profile'))
     
     appointment = valid_review(doctor_id, appointment_id)
-    doctor = find_doctor_app(doctor_id)
+    doctor = find_doc(doctor_id)
 
     if request.method == 'POST':
         rating = float(request.form.get('rating'))
@@ -94,9 +108,9 @@ def leave_review(doctor_id, appointment_id):
 
 
         try:
-            save_review(appointment, rating, comment)
+            save_review(appointment_id, rating, comment, doctor_id)
             flash('Review submitted successfully!', 'success')
-            return redirect(url_for('views.index'))
+            return redirect(url_for('views.patient_profile'))
         except Exception as e:
             flash('Could not submit review!', 'error')
             return redirect(url_for('views.index'))
@@ -144,7 +158,6 @@ def upload_doctor_picture():
 @views.route('/specialists', methods=['GET'])
 def our_specialists():
     search_query = request.args.get('search', '')
-    
     if search_query:
         doctors = session.query(Doctor).filter(
             (Doctor.first_name.ilike(f"%{search_query}%")) |
@@ -152,7 +165,22 @@ def our_specialists():
         ).all()
     else:
         doctors = session.query(Doctor).all()
-    return render_template('specialists.html', doctors=doctors)
+
+    images = {}
+    for doctor in doctors:
+        if os.path.exists(f'app/static/doctor_profile/{doctor.id}.jpg'):
+            image_exists = True
+        else:
+            image_exists = False
+
+        doc_id = doctor.id
+        doc_dict = {
+            'image': image_exists,
+            'str_id': str(doc_id)
+        }
+        images[doc_id] = doc_dict
+    
+    return render_template('specialists.html', doctors=doctors, images=images)
 
 @views.route('/specializations/<int:specialization_id>/doctors', methods=['GET'])
 def doctors_by_specialization(specialization_id):
@@ -282,8 +310,30 @@ def decline_doctor(doctor_id):
     return redirect(url_for('views.view_pending_doctors'))
 
 
-@views.route('/appointment/')
+@views.route('/reviews/<int:id>', methods=['GET'])
+def reviews(id):
+    """Retrieves all reviews for the doctor"""
+    appointments = find_doctor_app(id)
+    reviews = {}
+    doctor = find_doc(id)
+    for appointment in appointments:
+        try:
+            review = find_rev(appointment.id)
+        except NoResultFound:
+            review = None
 
-@views.route('/display/<int:id>')
-def display(id):
-    return render_template('display.html')
+        try:
+            patient = find_patient(appointment.patient_id)
+        except NoResultFound:
+            patient = None
+
+        review_info = {
+            'review': review,
+            'patient': patient
+        }
+        app_id = appointment.id
+        reviews[app_id] = review_info
+
+    return render_template('reviews.html', apps=appointments, revs=reviews,
+                           doctor=doctor, user_id=str(id),
+                           image_exists=os.path.exists(f'app/static/doctor_profile/{id}.jpg'))

@@ -109,7 +109,7 @@ def register_doc(
         else:
             raise ValueError("{} is invalid".format(email))
 
-def find_patient_app(id) -> List[User]:
+def find_patient_app(id) -> List[Appointment]:
     """returns the rows found in the appointments table
     """
     if not id:
@@ -128,7 +128,7 @@ def find_rev(appointment_id):
     except NoResultFound:
         raise NoResultFound
 
-def find_doctor_app(id) -> List[Doctor]:
+def find_doctor_app(id) -> List[Appointment]:
     """returns the rows found in the appointments table
     """
     if not id:
@@ -168,9 +168,15 @@ def valid_review(doctor_id, appointment_id) -> Appointment:
     else:
         return None
 
-def save_review(appointment, rating, comment) -> bool:
+def save_review(appointment_id, rating, comment, doctor_id):
+    review = Review(
+        appointment_id=appointment_id,
+        rating=rating,
+        comment=comment,
+        date_posted=datetime.utcnow(),
+        doctor_id=doctor_id
+        )
     try:
-        review = Review(appointment=appointment, rating=rating, comment=comment)
         db.session.add(review)
         db.session.commit()
     except Exception as e:

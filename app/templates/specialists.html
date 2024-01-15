@@ -3,8 +3,8 @@
 {% block title %} Specialists {% endblock %}
 {% block content %}
 <section>
-    <div class="top">
-      <h2>Our Specialists:</h2>
+    <div class="top" style="margin: 15px">
+      <h2>Our Specialists</h2>
       <form action="{{ url_for('views.our_specialists') }}" method="get">
         <label for="search">Search Specialization:</label>
         <input type="text" id="search" name="search">
@@ -19,18 +19,29 @@
           {% endif %}
           <div class="doctor-details">
               <h3><a href="/doctor/{{ doctor.id }}">{{ doctor.name }}</a></h3>
-              <img
-                  src="../static/doctor_profile/{{ doctor.id }}.jpg"
-                  alt="Profile Picture"
-              />
+              <div id="profile-picture-container" class="profile-picture-container">
+                {% if images[doctor.id]['image'] %}
+                  <img
+                    id="profile-picture"
+                    style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover; border: 4px solid green; margin-bottom: 40px;"
+                    src="{{ url_for('static', filename='doctor_profile/' + doctor.id|string  + '.jpg') }}"
+                    alt="Profile picture"
+                  />
+                {% else %}
+                  <img
+                    id="profile-picture"
+                    style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover; border: 4px solid green; margin-bottom: 40px;"
+                    src="{{ url_for('static', filename='avatar1.png') }}"
+                    alt="Avatar"
+                  />
+                {% endif %}
+              </div>
               <p>Dr.: {{ doctor.first_name }} {{ doctor.last_name }}</p>
               <p>Speciality: {{ doctor.speciality }}</p>
               <p>Bio: {{ doctor.bio }}</p>
               <a href="{{ doctor.calendly_link }}" target="_blank" class="btn">Appointment</a>
-              <a href="{{ doctor.location_iframe }}" >Location</a>                          
-              <!-- <div class="location-iframe" style="width: 15%; height: 15%;">
-                {{ doctor.location_iframe }}
-              </div> -->
+              <a href="{{ doctor.location_iframe }}" style="margin: 70px; font-weight: bold; font-size: large;" >Location</a>
+              <a href="/reviews/{{ doctor.id }}" style="font-weight: bold; font-size: large;" >Reviews</a>
           </div>
           {% set counter = counter + 1 %} {% endfor %}
       </div>
