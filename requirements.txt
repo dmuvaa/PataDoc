@@ -55,7 +55,6 @@ PyJWT==2.3.0
 pyOpenSSL==21.0.0
 pyparsing==2.4.7
 pyspnego==0.10.2
-python-apt==2.4.0+ubuntu1
 python-dotenv==1.0.0
 pytz==2023.3.post1
 PyYAML==5.4.1
